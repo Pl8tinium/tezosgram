@@ -1,0 +1,31 @@
+@import '../../global-styles.scss';
+
+.outer {
+    height: 12vh;
+    width: 30vw;
+    position: absolute;
+    background-color: burlywood;
+    z-index: 999;
+    
+    display: grid;
+    grid-template-rows: 2vh 10vh;
+
+}
+
+.topbar {
+    @extend .full-size;
+    display: flex;
+    justify-content: flex-end;
+    align-content: center;
+
+    .move-button {
+        background-color: darkturquoise;
+        height: 25px;
+        width: 25px;
+    }
+}
+
+.content {
+    @extend .full-size;
+    background-color: darkkhaki;
+}

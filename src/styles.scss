@@ -1,0 +1,10 @@
+@import './app/global-styles.scss';
+
+html {
+    @extend .full-size;
+}
+
+body {
+    @extend .full-size;
+    margin: unset;
+}

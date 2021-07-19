@@ -1,0 +1,18 @@
+@import '../../global-styles.scss';
+
+.outer {
+    height: 10vh;
+    width: 100wh;
+
+    display: flex; 
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: darksalmon;
+
+    .addChannel {
+        height: auto; 
+        width: auto; 
+        max-width: 30px; 
+        max-height: 30px;
+    }
+}

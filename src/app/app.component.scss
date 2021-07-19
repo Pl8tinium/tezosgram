@@ -1,0 +1,14 @@
+@import './global-styles.scss';
+
+body {
+    margin: 0;
+}
+
+.main {
+    display: grid;
+    grid-template-rows: 10vw 90vw;
+}
+
+:host .topbar, .board, .loading {
+    @extend .full-size;
+}
