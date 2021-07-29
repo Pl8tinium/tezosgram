@@ -1,14 +1,8 @@
 <ng-container *ngIf="!isLoading">
-  <app-topbar class="topbar">
-
-  </app-topbar>
-  <app-board class="board">
-
-  </app-board>
+  <app-topbar topBar class="topbar"></app-topbar>
+  <app-board class="board"></app-board>
 </ng-container>
-<app-loading *ngIf="isLoading" class="loading">
-
-</app-loading>
+<app-loading *ngIf="isLoading" class="loading"></app-loading>
 
 
 

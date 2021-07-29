@@ -7,4 +7,5 @@ html {
 body {
     @extend .full-size;
     margin: unset;
+    overflow: hidden;
 }

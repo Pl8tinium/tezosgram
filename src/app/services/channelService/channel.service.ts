@@ -7,6 +7,8 @@ import { ChannelInfo } from 'src/app/models/channelModels';
 })
 export class ChannelService {
 
+  public topBarHeight: number;
+
   public currentlyMovedChannel: ChannelInfo | undefined;
 
   private $channelAdd: Subject<ChannelInfo>;

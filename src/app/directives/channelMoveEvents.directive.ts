@@ -1,6 +1,7 @@
 import { Directive, HostListener, Input, Output } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
+import { ChannelComponent } from '../components/channel/channel.component';
 import { ChannelInfo } from '../models/channelModels';
 import { ChannelService } from '../services/channelService/channel.service';
 
@@ -9,13 +10,10 @@ import { ChannelService } from '../services/channelService/channel.service';
 })
 export class ChannelMoveEventsDirective {
 
-  @Input()
-  public channelInfo: ChannelInfo;
-
-  constructor(private channelService: ChannelService) { }
+  constructor(private channelService: ChannelService, private channelComponent: ChannelComponent) { }
 
   @HostListener('mousedown', ['$event'])
   down() {
-    this.channelService.currentlyMovedChannel = this.channelInfo;
+    this.channelService.currentlyMovedChannel = this.channelComponent.info;
   }
 }

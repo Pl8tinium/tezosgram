@@ -4,6 +4,13 @@
     height: 90vh;
     width: 100vw;
     background-color: aqua;
+    display: grid;
+}
 
-    // position: absolute;
+.board {
+    height: 90%;
+    width: 90%;
+    justify-self: center;
+    align-self: center;
+    background-color: aqua;
 }
