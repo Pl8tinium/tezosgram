@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
-import { ChannelInfo } from 'src/app/models/channelModels';
+import { ChannelInfo } from 'src/app/models/channelInfo';
 import { Dimension } from 'src/app/models/dimension';
 import { BoardService } from 'src/app/services/boardService/board.service';
 import { ChannelService } from 'src/app/services/channelService/channel.service';
@@ -10,23 +10,10 @@ import { ChannelService } from 'src/app/services/channelService/channel.service'
   styleUrls: ['./board.component.scss']
 })
 export class BoardComponent implements OnInit {
-
-  public channels: Array<ChannelInfo> = [];
-
-  constructor(private channelService: ChannelService, private elementRef: ElementRef, private boardService: BoardService) { }  
+  constructor(public channelService: ChannelService, private elementRef: ElementRef, private boardService: BoardService) { }
 
   ngOnInit(): void {
     this.getBoardDimensions();
-    this.channelService.$addChannel.subscribe(x => this.addChannel(x));
-    this.channelService.$removeChannel.subscribe(x => this.removeChannel(x));
-  }
-
-  private addChannel(info: ChannelInfo): void {
-    this.channels.push(info);
-  }
-
-  private removeChannel(info: ChannelInfo): void {
-    this.channels = this.channels.filter(c => c.channelLocation !== info.channelLocation);
   }
 
   public getBoardDimensions(): void {

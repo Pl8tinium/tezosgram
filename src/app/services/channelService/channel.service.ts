@@ -1,51 +1,35 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { ChannelInfo } from 'src/app/models/channelModels';
+import { ChannelInfo } from 'src/app/models/channelInfo';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChannelService {
+  public currentlyMoving: ChannelInfo | undefined;
+  private _channels: Array<ChannelInfo> = [];
 
-  public topBarHeight: number;
+  constructor() { }
 
-  public currentlyMovedChannel: ChannelInfo | undefined;
-
-  private $channelAdd: Subject<ChannelInfo>;
-
-  private $channelRemove: Subject<ChannelInfo>;
-
-  private $channelMove: Subject<MouseEvent>;
-
-  constructor() { 
-    this.$channelAdd = new Subject<ChannelInfo>();
-    this.$channelRemove = new Subject<ChannelInfo>();
-    this.$channelMove = new Subject<MouseEvent>();
+  public get channels(): Array<ChannelInfo> {
+    return this._channels;
   }
 
-  public get $addChannel(): Observable<ChannelInfo> {
-    return this.$channelAdd;
-  }
-
-  public get $removeChannel(): Observable<ChannelInfo> {
-    return this.$channelRemove;
-  }
-
-  public get $moveChannel(): Observable<MouseEvent> {
-    return this.$channelMove;
-  }
-
-  public moveChannel(event: MouseEvent): void {
-    if (this.currentlyMovedChannel !== undefined) {
-      this.$channelMove.next(event);
+  public moveChannel(info: ChannelInfo, event: MouseEvent): void {
+    if (this.currentlyMoving !== undefined && this._channels.some(channel => channel.channelLocation === info.channelLocation)) {
+      this._channels.find(channel => channel.channelLocation === info.channelLocation)?.instance.moveChannel(event);
     }
   }
 
   public addChannel(info: ChannelInfo): void {
-    this.$channelAdd.next(info);
+    if (!this._channels.some(channel => channel.channelLocation === info.channelLocation)) {
+      this._channels.push(info);
+    }
   }
 
   public removeChannel(info: ChannelInfo): void {
-    this.$channelRemove.next(info);
+    if (this._channels.some(channel => channel.channelLocation === info.channelLocation)) {
+      this._channels = this.channels.filter(channel => channel.channelLocation !== info.channelLocation);
+    }
   }
 }

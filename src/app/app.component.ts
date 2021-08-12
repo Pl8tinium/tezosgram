@@ -1,13 +1,11 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { TopbarComponent } from './components/topbar/topbar.component';
-import { ChannelService } from './services/channelService/channel.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
   title = 'xtzmsg';
 
   // animation
@@ -15,11 +13,7 @@ export class AppComponent implements OnInit{
   timeLeft: number = 1;
   interval: any;
 
-  //channel init
-  @ViewChild('topBar', {read: ElementRef, static: true })
-  private topBar: ElementRef;
-
-  constructor(private channelService: ChannelService) {}
+  constructor() { }
 
   ngOnInit(): void {
     this.loadingTimer();
@@ -27,12 +21,12 @@ export class AppComponent implements OnInit{
 
   loadingTimer(): void {
     this.interval = setInterval(() => {
-      if(this.timeLeft > 0) {
+      if (this.timeLeft > 0) {
         this.timeLeft--;
       } else {
         clearInterval(this.interval);
         this.isLoading = false;
       }
-    },1000);
+    }, 1000);
   }
 }

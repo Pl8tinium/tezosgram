@@ -1,20 +1,19 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BoardComponent } from './components/board/board.component';
-import { TopbarComponent } from './components/topbar/topbar.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { ChannelComponent } from './components/channel/channel.component';
 import { ChannelMoveEventsDirective } from './directives/channelMoveEvents.directive';
 import { BoardEventsDirective } from './directives/boardEvents.directive';
+import { TopBarComponent } from './components/topBar/topBar.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    TopbarComponent,
+    TopBarComponent,
     BoardComponent,
     LoadingComponent,
     ChannelComponent,
