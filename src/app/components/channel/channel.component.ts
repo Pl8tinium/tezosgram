@@ -24,12 +24,13 @@ export class ChannelComponent implements OnInit {
   @Input()
   public info: ChannelInfo;
 
-  constructor(private topBarService: TopBarService, private channelService: ChannelService, private boardService: BoardService, private elementRef: ElementRef) { }
+  constructor(private topBarService: TopBarService, public channelService: ChannelService, private boardService: BoardService, private elementRef: ElementRef) { }
 
-  public get position(): { top: string, left: string } {
+  public get position(): { top: string, left: string, zIndex: string } {
     return {
       'top': this.currentPos.y + 'px',
       'left': this.currentPos.x + 'px',
+      'zIndex': this.info.layer.toString(),
     };
   }
 
@@ -37,6 +38,12 @@ export class ChannelComponent implements OnInit {
     this.info.instance = this;
     this.setStartPosition();
     this.getChannelSize();
+    this.initHtml();
+  }
+
+  private initHtml(): void {
+    this.elementRef.nativeElement.children[0].children[1].style.backgroundColor = this.info.channelColor;
+    this.elementRef.nativeElement.children[0].style.zIndex = this.info.layer;
   }
 
   private getChannelSize(): void {
@@ -71,5 +78,17 @@ export class ChannelComponent implements OnInit {
       this.currentPos.x = event.pageX - this.mouseShift.x + 2;
       this.currentPos.y = event.pageY - this.mouseShift.y;
     }
+  }
+
+  public closeChannel(): void {
+    this.channelService.removeChannel(this.info);
+  }
+
+  public layerUp(): void {
+    this.channelService.layerUp(this.info);
+  }
+
+  public layerDown(): void {
+    this.channelService.layerDown(this.info);
   }
 }

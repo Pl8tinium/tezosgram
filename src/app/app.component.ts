@@ -10,7 +10,7 @@ export class AppComponent implements OnInit {
 
   // animation
   isLoading: boolean = true;
-  timeLeft: number = 1;
+  timeLeft: number = 0;//1;
   interval: any;
 
   constructor() { }

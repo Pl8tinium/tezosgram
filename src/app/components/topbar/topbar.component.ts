@@ -18,11 +18,4 @@ export class TopBarComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.topBarService.setTopBarHeight = this.elementRef.nativeElement.children[0].offsetHeight;
   }
-
-  private testCounter: number = 0;
-
-  public addChannel(): void {
-    this.channelService.addChannel(new ChannelInfo('TEESTLOCATION' + this.testCounter));
-    this.testCounter++;
-  }
 }

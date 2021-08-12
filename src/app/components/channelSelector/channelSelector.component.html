@@ -1,0 +1,19 @@
+<div class="outer">
+    <div class="channel-select">
+        <mat-form-field appearance="fill">
+            <mat-label>Channel selection</mat-label>
+            <input type="text" aria-label="Number" matInput [(ngModel)]="selectedChannel" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let channel of availableChannels" [value]="channel">
+                    {{channel}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </div>
+    <input class="channel-color" [style.background]="selectedColor" [colorPicker]="selectedColor"
+        (colorPickerChange)="selectedColor=$event" />
+    <button class="channel-add" mat-fab color="primary" [matTooltipPosition]="'right'"
+        matTooltip="Add the selected channel" (click)="addChannel()">
+        <mat-icon style="transform: scale(2);">blur_on</mat-icon>
+    </button>
+</div>

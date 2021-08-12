@@ -3,29 +3,35 @@
 .outer {
     height: 12vh;
     width: 30vw;
-    position: absolute;
-    background-color: burlywood;
-    z-index: 999;
-    
+    position: absolute;  
     display: grid;
-    grid-template-rows: 2vh 10vh;
+    grid-template-rows: 2.4vh 10vh;
 
-}
+    .topbar {
+        @extend .full-size;
+        display: flex;
+        justify-content: flex-end;
+        align-content: center;
+        background-color: burlywood;
+        border-top-right-radius: 8px;
+        border-top-left-radius: 8px;
 
-.topbar {
-    @extend .full-size;
-    display: flex;
-    justify-content: flex-end;
-    align-content: center;
+        .nav-buttons {
+            @extend .unselectable;
+            height: 100%;
+            width: 25px;
+        }
 
-    .move-button {
-        background-color: darkturquoise;
-        height: 25px;
-        width: 25px;
+        .nav-buttons:hover {
+            background-color: rgb(255, 81, 81);
+            border-radius: 50px;
+        }
     }
-}
-
-.content {
-    @extend .full-size;
-    background-color: darkkhaki;
+    
+    .content {
+        @extend .full-size;
+        background-color: darkkhaki;
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+    }
 }

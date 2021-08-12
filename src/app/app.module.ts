@@ -8,7 +8,23 @@ import { ChannelComponent } from './components/channel/channel.component';
 import { ChannelMoveEventsDirective } from './directives/channelMoveEvents.directive';
 import { BoardEventsDirective } from './directives/boardEvents.directive';
 import { TopBarComponent } from './components/topBar/topBar.component';
+import { ChannelSelectorComponent } from './components/channelSelector/channelSelector.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ColorPickerModule } from 'ngx-color-picker';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
+const modules = [
+  MatAutocompleteModule,
+  MatSelectModule,
+  MatInputModule,
+]
 
 @NgModule({
   declarations: [
@@ -19,10 +35,22 @@ import { TopBarComponent } from './components/topBar/topBar.component';
     ChannelComponent,
     ChannelMoveEventsDirective,
     BoardEventsDirective,
+    ChannelSelectorComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ColorPickerModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
