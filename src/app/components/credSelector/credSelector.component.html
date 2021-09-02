@@ -1,0 +1,17 @@
+<div class="outer">
+    <mat-form-field appearance="fill" class="rpc-select">
+        <mat-label>Rpc node selection {{credService.isValidUrl(credService.getRpc) ? "[url valid]": "[url invalid]"}}
+        </mat-label>
+        <input type="text" aria-label="Number" matInput [(ngModel)]="credService.setRpc" [matAutocomplete]="auto">
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            <mat-option *ngFor="let predefinedRpc of credService.predefinedRpcs" [value]="predefinedRpc">
+                {{predefinedRpc}}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+    <button class="connect-cred" mat-fab color="primary" [matTooltipPosition]="'right'"
+        (click)="credService.isAuthenticated ? credService.authWallet(): credService.deauthWallet()"
+        matTooltip="{{credService.isAuthenticated ? 'Disconnect your wallet' : 'Connect your wallet' }}">
+        <img src="../../../assets/beaconIcon.png">
+    </button>
+</div>

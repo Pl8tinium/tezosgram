@@ -19,11 +19,17 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { HttpClientModule } from '@angular/common/http';
+import { CredSelectorComponent } from './components/credSelector/credSelector.component';
 
-const modules = [
-  MatAutocompleteModule,
-  MatSelectModule,
+const materialModules = [
   MatInputModule,
+  MatAutocompleteModule,
+  MatFormFieldModule,
+  MatSelectModule,
+  MatButtonModule,
+  MatIconModule,
+  MatTooltipModule,
 ]
 
 @NgModule({
@@ -36,6 +42,8 @@ const modules = [
     ChannelMoveEventsDirective,
     BoardEventsDirective,
     ChannelSelectorComponent,
+    CredSelectorComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -44,13 +52,8 @@ const modules = [
     ReactiveFormsModule,
     FormsModule,
     ColorPickerModule,
-    MatInputModule,
-    MatAutocompleteModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatIconModule,
-    MatTooltipModule,
+    HttpClientModule,
+    ...materialModules,
   ],
   providers: [],
   bootstrap: [AppComponent]
