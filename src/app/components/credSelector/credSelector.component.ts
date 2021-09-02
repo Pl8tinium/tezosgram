@@ -15,4 +15,8 @@ export class CredSelectorComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  clickme() {
+    this.contractTEST.getOperationMsgs("KT1AD55utWAC27ubY2rQaYXDa7Vi37Ev9vHc").subscribe(x => console.log(x));
+  }
 }

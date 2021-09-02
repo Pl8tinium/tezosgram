@@ -25,13 +25,23 @@ export class ChannelSelectorComponent implements OnInit {
   }
 
   public addChannel(): void {
-    if (this.availableChannels.includes(this.selectedChannel) || this.contractService.checkIfContractExists(this.selectedChannel)) {
+    const add = () => {
       const isAdded = this.channelService.addChannel(new ChannelInfo(this.selectedChannel, this.selectedColor));
       if (isAdded) {
         this.selectedColor = this.standardColor;
       }
+    }
+
+    if (this.availableChannels.includes(this.selectedChannel)) {
+      add();
     } else {
-      this.notifyService.notify("Contract has not been found on chain!");
+      this.contractService.checkIfContractValid(this.selectedChannel).then((isValid: boolean) => {
+        if (isValid) {
+          add();
+        } else {
+          this.notifyService.notify("Contract has not been found on chain!");
+        }
+      })
     }
   }
 }
