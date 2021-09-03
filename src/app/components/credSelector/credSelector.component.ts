@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ContractService } from 'src/app/services/contractService/contract.service';
+import { ChainInfoService } from 'src/app/services/chainInfoService/chainInfo.service';
 import { CredService } from 'src/app/services/credService/cred.service';
+import { NotifyService } from 'src/app/services/notifyService/notify.service';
 
 @Component({
   selector: 'app-cred-selector',
@@ -11,12 +12,12 @@ export class CredSelectorComponent implements OnInit {
 
   public selectedRpc: string;
 
-  constructor(public credService: CredService, private contractTEST: ContractService) { }
+  constructor(public credService: CredService, private TEST: NotifyService) { }
 
   ngOnInit(): void {
   }
 
   clickme() {
-    this.contractTEST.getOperationMsgs("KT1AD55utWAC27ubY2rQaYXDa7Vi37Ev9vHc").subscribe(x => console.log(x));
+    this.TEST.notify("ye")
   }
 }

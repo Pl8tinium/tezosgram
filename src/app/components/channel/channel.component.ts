@@ -1,7 +1,10 @@
-import { Component, ElementRef, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { ChannelInfo } from 'src/app/models/channelInfo';
 import { Dimension } from 'src/app/models/dimension';
+import { MsgOperation } from 'src/app/models/msgOperation';
 import { BoardService } from 'src/app/services/boardService/board.service';
+import { ChainInfoService } from 'src/app/services/chainInfoService/chainInfo.service';
 import { ChannelService } from 'src/app/services/channelService/channel.service';
 import { TopBarService } from 'src/app/services/topBarService/topBar.service';
 
@@ -10,21 +13,19 @@ import { TopBarService } from 'src/app/services/topBarService/topBar.service';
   templateUrl: './channel.component.html',
   styleUrls: ['./channel.component.scss']
 })
-export class ChannelComponent implements OnInit {
+export class ChannelComponent implements OnInit, OnDestroy {
+  private messages: Array<MsgOperation>;
   private isInit: boolean = false;
-
   private mouseShift: Dimension = new Dimension(0, 0);
-
   private currentPos: Dimension = new Dimension(0, 0);
-
   private invisibleBorder: Dimension = new Dimension(50, 50);
-
   private channelSize: Dimension = new Dimension(0, 0);
+  private newBlockSubscription: Subscription;
 
   @Input()
   public info: ChannelInfo;
 
-  constructor(private topBarService: TopBarService, public channelService: ChannelService, private boardService: BoardService, private elementRef: ElementRef) { }
+  constructor(private topBarService: TopBarService, public channelService: ChannelService, private boardService: BoardService, private elementRef: ElementRef, private chainInfoService: ChainInfoService) { }
 
   public get position(): { top: string, left: string, zIndex: string } {
     return {
@@ -39,6 +40,13 @@ export class ChannelComponent implements OnInit {
     this.setStartPosition();
     this.getChannelSize();
     this.initHtml();
+    this.newBlockSubscription = this.chainInfoService.newBlockNotification.subscribe(() => {
+      this.chainInfoService.getOperationMsgs(this.info.channelKey).subscribe((msgOps: Array<MsgOperation>) => this.messages = msgOps);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.newBlockSubscription.unsubscribe();
   }
 
   private initHtml(): void {

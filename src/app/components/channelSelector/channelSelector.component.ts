@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ChannelInfo } from 'src/app/models/channelInfo';
 import { ChannelService } from 'src/app/services/channelService/channel.service';
-import { ContractService } from 'src/app/services/contractService/contract.service';
 import { NotifyService } from 'src/app/services/notifyService/notify.service';
+import { ChainInfoService } from 'src/app/services/chainInfoService/chainInfo.service';
 
 @Component({
   selector: 'app-channel-selector',
@@ -17,11 +17,12 @@ export class ChannelSelectorComponent implements OnInit {
   private standardColor: string = '#2889e9';
   public selectedColor: string = this.standardColor;
 
-  constructor(private channelService: ChannelService, private contractService: ContractService, private notifyService: NotifyService) { }
+  constructor(private channelService: ChannelService, private chainInfoService: ChainInfoService, private notifyService: NotifyService) { }
 
 
 
   ngOnInit(): void {
+
   }
 
   public addChannel(): void {
@@ -35,7 +36,7 @@ export class ChannelSelectorComponent implements OnInit {
     if (this.availableChannels.includes(this.selectedChannel)) {
       add();
     } else {
-      this.contractService.checkIfContractValid(this.selectedChannel).then((isValid: boolean) => {
+      this.chainInfoService.checkIfContractValid(this.selectedChannel).then((isValid: boolean) => {
         if (isValid) {
           add();
         } else {
