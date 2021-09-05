@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { ChannelInfo } from 'src/app/models/channelInfo';
+import { DialogService } from '../dialogService/dialog.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ export class ChannelService {
   public currentlyMoving: ChannelInfo | undefined;
   private _channels: Array<ChannelInfo> = [];
 
-  constructor() { }
+  constructor(private dialogService: DialogService) { }
 
   public get channels(): Array<ChannelInfo> {
     return this._channels;
@@ -28,6 +29,8 @@ export class ChannelService {
       this._channels.push(info);
 
       return true;
+    } else {
+      this.dialogService.notify("Channel is already opened");
     }
 
     return false;

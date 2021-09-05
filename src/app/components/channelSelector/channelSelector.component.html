@@ -10,6 +10,10 @@
     </mat-form-field>
     <input class="channel-color" [style.background]="selectedColor" [colorPicker]="selectedColor"
         (colorPickerChange)="selectedColor=$event" />
+    <button class="channel-add" mat-fab color="primary" [matTooltipPosition]="'right'" matTooltip="Add to favorites"
+        (click)="addAddressToStorage()">
+        <mat-icon style="transform: scale(2);">favorite_border</mat-icon>
+    </button>
     <button class="channel-add" mat-fab color="primary" [matTooltipPosition]="'right'"
         matTooltip="Add the selected channel" (click)="addChannel()">
         <mat-icon style="transform: scale(2);">blur_on</mat-icon>
@@ -38,7 +42,7 @@
         </div>
         <button class="originate-template-fav" mat-fab color="primary" [disabled]="!getChannelOrigination.isOriginated"
             [matTooltipPosition]="'right'" matTooltip="Add to favorites"
-            (click)="chainInteractionService.originateChannel(getChannelOrigination)">
+            (click)="persistenceService.addAddressToStorage(getChannelOrigination.channelAddress)">
             <mat-icon style="transform: scale(2);">favorite_border</mat-icon>
         </button>
     </div>

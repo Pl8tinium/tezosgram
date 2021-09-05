@@ -6,6 +6,8 @@ import { ChainInfoService } from 'src/app/services/chainInfoService/chainInfo.se
 import { ChainInteractionService } from 'src/app/services/chainInteractionService/chainInteraction.service';
 import { DialogService } from 'src/app/services/dialogService/dialog.service';
 import { ChannelOrigination } from 'src/app/models/channelOrigination';
+import { PersistenceService } from 'src/app/services/persistenceService/persistence.service';
+import { TrustedAddresses } from 'src/assets/trustedAddresses';
 
 @Component({
   selector: 'app-channel-selector',
@@ -15,11 +17,10 @@ import { ChannelOrigination } from 'src/app/models/channelOrigination';
 export class ChannelSelectorComponent implements OnInit {
 
   public selectedChannel: string;
-  public availableChannels: string[] = ['PredefinedContractAddr1', 'PredefinedContractAddr2', 'PredefinedContractAddr3'];
   private standardColor: string = '#2889e9';
   public selectedColor: string = this.standardColor;
 
-  constructor(private channelService: ChannelService, private chainInfoService: ChainInfoService, private dialogService: DialogService, public chainInteractionService: ChainInteractionService) { }
+  constructor(private channelService: ChannelService, private chainInfoService: ChainInfoService, private dialogService: DialogService, public chainInteractionService: ChainInteractionService, public persistenceService: PersistenceService) { }
 
   @ViewChild('originateChannelTemplate') private originateChannelTemplate: TemplateRef<any>;
 
@@ -29,6 +30,11 @@ export class ChannelSelectorComponent implements OnInit {
 
   }
 
+  public get availableChannels(): Array<string> {
+    const addresses = TrustedAddresses.trustedContracts.concat(this.persistenceService.getStoredAddresses)
+    return addresses.filter((v, i, a) => a.indexOf(v) === i).filter(address => address !== '' && address !== undefined);
+  }
+
   public get getChannelOrigination(): ChannelOrigination {
     return this.channelOrigination as ChannelOrigination;
   }
@@ -36,6 +42,24 @@ export class ChannelSelectorComponent implements OnInit {
   public originateChannel(): void {
     this.channelOrigination = new ChannelOrigination();
     this.dialogService.displayForm(this.originateChannelTemplate);
+  }
+
+  public addAddressToStorage(): void {
+    this.executeWhenContractValid(this.persistenceService.addAddressToStorage, [this.selectedChannel]);
+  }
+
+  private executeWhenContractValid(func: Function, params?: Array<any>): void {
+    this.chainInfoService.checkIfContractValid(this.selectedChannel).then((isValid: boolean) => {
+      if (isValid) {
+        if (params) {
+          func(...params);
+        } else {
+          func();
+        }
+      } else {
+        this.dialogService.notify("Contract has not been found on chain!");
+      }
+    });
   }
 
   public addChannel(): void {
@@ -49,13 +73,7 @@ export class ChannelSelectorComponent implements OnInit {
     if (this.availableChannels.includes(this.selectedChannel)) {
       add();
     } else {
-      this.chainInfoService.checkIfContractValid(this.selectedChannel).then((isValid: boolean) => {
-        if (isValid) {
-          add();
-        } else {
-          this.dialogService.notify("Contract has not been found on chain!");
-        }
-      })
+      this.executeWhenContractValid(add);
     }
   }
 }

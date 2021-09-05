@@ -58,6 +58,11 @@ export class ChainInfoService {
     }, this.blockTime * refreshFactor);
   }
 
+  public getChannelName(): string {
+    return "TESTNAMe";
+    // impl
+  }
+
   public getOperationMsgs(address: string): Observable<any> {
     const $response: Subject<any> = new Subject<any>();
     const apiOpTableEndpoint: string = "/tables/op?";

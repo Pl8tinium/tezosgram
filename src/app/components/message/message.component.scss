@@ -1,0 +1,14 @@
+.outer {
+    // border-radius: 15px;
+    display: grid;
+    grid-template-rows: 10px auto;
+    background-color: limegreen;
+
+    .sender {
+        font-size: 10px;
+    }
+
+    .message {
+
+    }
+}

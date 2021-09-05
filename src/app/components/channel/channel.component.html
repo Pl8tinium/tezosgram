@@ -1,9 +1,21 @@
 <div class="outer" [ngStyle]="position">
     <div class="topbar">
-        <mat-icon class="nav-buttons" (click)="layerUp()">vertical_align_top</mat-icon>
-        <mat-icon class="nav-buttons" (click)="layerDown()">vertical_align_bottom</mat-icon>
-        <mat-icon class="nav-buttons" (click)="closeChannel()">close</mat-icon>
-        <mat-icon class="nav-buttons" channelMoveEvents>zoom_out_map</mat-icon>
+        <span class="topbar-header">{{ info.channelName }}</span>
+        <div>
+            <mat-icon class="nav-buttons" (click)="layerUp()">vertical_align_top</mat-icon>
+            <mat-icon class="nav-buttons" (click)="layerDown()">vertical_align_bottom</mat-icon>
+            <mat-icon class="nav-buttons" (click)="closeChannel()">close</mat-icon>
+            <mat-icon class="nav-buttons" channelMoveEvents>zoom_out_map</mat-icon>
+        </div>
     </div>
-    <div class="content"></div>
+    <div class="content">
+        <div class="messages">
+            <ng-container *ngFor="let msg of messages">
+                <app-message class="message-component" [message]=msg></app-message>
+            </ng-container>
+        </div>
+        <div class="add-message">
+
+        </div>
+    </div>
 </div>

@@ -2,24 +2,20 @@ import { Injectable, OnInit } from '@angular/core';
 import { TezosToolkit } from "@taquito/taquito";
 import { BeaconWallet } from "@taquito/beacon-wallet";
 import { ChannelOrigination } from 'src/app/models/channelOrigination';
+import { TrustedAddresses } from 'src/assets/trustedAddresses';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChainInteractionService implements OnInit {
 
-  public readonly predefinedRpcs: Array<string> = [
-    "https://mainnet-tezos.giganode.io",
-    "https://rpc.tzstats.com"
-  ]
+  public readonly predefinedRpcs: Array<string> = Object.values(TrustedAddresses.predefinedRpcs);
 
   private selectedRpc: string = this.predefinedRpcs[0];
   // private tezosToolkit = new TezosToolkit(this.selectedRpc);
   // private wallet = new BeaconWallet({ name: "Beacon Docs Taquito" });
 
-  constructor() {
-
-  }
+  constructor() { }
 
   public get getRpc(): string {
     return this.selectedRpc;

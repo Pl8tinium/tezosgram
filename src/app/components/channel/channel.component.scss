@@ -1,20 +1,25 @@
 @import '../../global-styles.scss';
 
 .outer {
-    height: 12vh;
+    height: 30vh;
     width: 30vw;
     position: absolute;  
     display: grid;
-    grid-template-rows: 2.4vh 10vh;
+    grid-template-rows: 2.4vh auto;
 
     .topbar {
         @extend .full-size;
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
         align-content: center;
         background-color: burlywood;
         border-top-right-radius: 8px;
         border-top-left-radius: 8px;
+
+        .topbar-header {
+            align-self: center;
+            padding-left: 2px;
+        }
 
         .nav-buttons {
             @extend .unselectable;
@@ -29,9 +34,48 @@
     }
     
     .content {
-        @extend .full-size;
+        height: inherit;
+        width: 100%;
         background-color: darkkhaki;
         border-bottom-left-radius: 12px;
         border-bottom-right-radius: 12px;
-    }
+
+        .messages {
+            height: 80%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: auto;
+
+            .message-component {
+                padding-bottom: 50px;
+                height: 100%;
+                width: 100%;
+            }
+        }
+        
+        .messages::-webkit-scrollbar-track
+        { 
+            border-radius: 10px;
+            background-color: transparent;
+        }
+    
+        .messages::-webkit-scrollbar
+        {
+            width: 12px;
+            background-color: transparent;
+        }
+    
+        .messages::-webkit-scrollbar-thumb
+        {
+            border-radius: 10px;
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+            background-color: limegreen;
+        }
+
+        .add-message {
+            width: 100%;
+            height: 20%;
+        } 
+    }           
 }

@@ -14,7 +14,7 @@ import { TopBarService } from 'src/app/services/topBarService/topBar.service';
   styleUrls: ['./channel.component.scss']
 })
 export class ChannelComponent implements OnInit, OnDestroy {
-  private messages: Array<MsgOperation>;
+  public messages: Array<MsgOperation>;
   private isInit: boolean = false;
   private mouseShift: Dimension = new Dimension(0, 0);
   private currentPos: Dimension = new Dimension(0, 0);
@@ -40,9 +40,13 @@ export class ChannelComponent implements OnInit, OnDestroy {
     this.setStartPosition();
     this.getChannelSize();
     this.initHtml();
-    this.newBlockSubscription = this.chainInfoService.newBlockNotification.subscribe(() => {
-      this.chainInfoService.getOperationMsgs(this.info.channelAddress).subscribe((msgOps: Array<MsgOperation>) => this.messages = msgOps);
-    });
+    this.info.channelName = this.chainInfoService.getChannelName();
+    this.fetchMsgs();
+    this.newBlockSubscription = this.chainInfoService.newBlockNotification.subscribe(this.fetchMsgs);
+  }
+
+  private fetchMsgs(): void {
+    this.chainInfoService.getOperationMsgs(this.info.channelAddress).subscribe((msgOps: Array<MsgOperation>) => this.messages = msgOps);
   }
 
   ngOnDestroy(): void {

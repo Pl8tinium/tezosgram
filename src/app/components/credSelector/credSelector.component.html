@@ -1,10 +1,12 @@
 <div class="outer">
-    <mat-form-field appearance="fill" class="rpc-select">
-        <mat-label>Rpc node selection {{chainInteractionService.isValidUrl(chainInteractionService.getRpc) ? "[url
-            valid]": "[url invalid]"}}
+    <mat-form-field appearance="fill" class="rpc-select" (click)="rpcSelectionClicked = true">
+        <mat-label *ngIf="isInitialized">Rpc node selection <span *ngIf="rpcSelectionClicked">
+                {{ chainInteractionService.isValidUrl(chainInteractionService.getRpc) ? "[url valid]": "[url invalid]"
+                }}
+            </span>
         </mat-label>
-        <input type="text" aria-label="Number" matInput [(ngModel)]="chainInteractionService.setRpc"
-            [matAutocomplete]="auto">
+        <input type="text" aria-label="Number" matInput [formControl]="rpcSelection"
+            [(ngModel)]="chainInteractionService.setRpc" [matAutocomplete]="auto">
         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
             <mat-option *ngFor="let predefinedRpc of chainInteractionService.predefinedRpcs" [value]="predefinedRpc">
                 {{predefinedRpc}}
