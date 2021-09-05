@@ -41,7 +41,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
     this.getChannelSize();
     this.initHtml();
     this.newBlockSubscription = this.chainInfoService.newBlockNotification.subscribe(() => {
-      this.chainInfoService.getOperationMsgs(this.info.channelKey).subscribe((msgOps: Array<MsgOperation>) => this.messages = msgOps);
+      this.chainInfoService.getOperationMsgs(this.info.channelAddress).subscribe((msgOps: Array<MsgOperation>) => this.messages = msgOps);
     });
   }
 

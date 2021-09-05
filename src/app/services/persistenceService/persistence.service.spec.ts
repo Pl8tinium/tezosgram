@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CredService } from '../../cred.service';
+import { PersistenceService } from './persistence.service';
 
-describe('CredService', () => {
-  let service: CredService;
+describe('PersistenceService', () => {
+  let service: PersistenceService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(CredService);
+    service = TestBed.inject(PersistenceService);
   });
 
   it('should be created', () => {

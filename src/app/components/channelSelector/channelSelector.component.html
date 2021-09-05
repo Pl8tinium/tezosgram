@@ -14,4 +14,32 @@
         matTooltip="Add the selected channel" (click)="addChannel()">
         <mat-icon style="transform: scale(2);">blur_on</mat-icon>
     </button>
+    <div (click)="originateChannel()" class="channel-originate mat-elevation-z4">
+        <p class="channel-originate-add">+</p>
+    </div>
 </div>
+
+<ng-template #originateChannelTemplate>
+    <div class="originate-template">
+        <mat-form-field appearance="fill">
+            <mat-label>New channel name</mat-label>
+            <input matInput [(ngModel)]="getChannelOrigination.channelName">
+        </mat-form-field>
+        <div class="originate-template-send">
+            <button mat-fab color="primary" class="originate-template-send-btn"
+                [disabled]="!getChannelOrigination.channelName || getChannelOrigination.isOriginated"
+                [matTooltipPosition]="'right'" matTooltip="Originate a new channel!"
+                (click)="chainInteractionService.originateChannel(getChannelOrigination)">
+                <mat-icon style="transform: scale(2);">add_circle_outline</mat-icon>
+            </button>
+            <div [style.background-color]="getChannelOrigination.isOriginated ? 'green' : 'yellow'"
+                matTooltip="{{ getChannelOrigination.isOriginated ? 'Instantiation status: Contract successfully originated!': 'Instantiation status: Contract not deployed, yet' }}"
+                class="originate-template-success"></div>
+        </div>
+        <button class="originate-template-fav" mat-fab color="primary" [disabled]="!getChannelOrigination.isOriginated"
+            [matTooltipPosition]="'right'" matTooltip="Add to favorites"
+            (click)="chainInteractionService.originateChannel(getChannelOrigination)">
+            <mat-icon style="transform: scale(2);">favorite_border</mat-icon>
+        </button>
+    </div>
+</ng-template>

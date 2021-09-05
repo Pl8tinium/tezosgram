@@ -3,14 +3,15 @@ import { ChannelComponent } from "../components/channel/channel.component";
 export class ChannelInfo {
 
     constructor(location: string, channelColor?: string) {
-        this.channelKey = location;
+        this.channelAddress = location;
         if (channelColor) {
             this.channelColor = channelColor;
         }
     }
 
-    channelKey: string;
-    channelColor: string;
-    instance: ChannelComponent;
-    layer: number;
+    public channelAddress: string;
+    public channelName: string;
+    public channelColor: string;
+    public instance: ChannelComponent;
+    public layer: number;
 }

@@ -1,11 +1,12 @@
 import { Injectable, OnInit } from '@angular/core';
 import { TezosToolkit } from "@taquito/taquito";
 import { BeaconWallet } from "@taquito/beacon-wallet";
+import { ChannelOrigination } from 'src/app/models/channelOrigination';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CredService implements OnInit {
+export class ChainInteractionService implements OnInit {
 
   public readonly predefinedRpcs: Array<string> = [
     "https://mainnet-tezos.giganode.io",
@@ -52,6 +53,11 @@ export class CredService implements OnInit {
     } catch (_) {
       return false;
     }
+  }
+
+  public originateChannel(channelOrigination: ChannelOrigination): void {
+    console.log(channelOrigination)
+    channelOrigination.isOriginated = true;
   }
 
   ngOnInit(): void {

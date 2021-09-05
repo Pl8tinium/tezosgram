@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ChainInfoService } from 'src/app/services/chainInfoService/chainInfo.service';
-import { CredService } from 'src/app/services/credService/cred.service';
-import { NotifyService } from 'src/app/services/notifyService/notify.service';
+import { ChainInteractionService } from 'src/app/services/chainInteractionService/chainInteraction.service';
+import { DialogService } from 'src/app/services/dialogService/dialog.service';
 
 @Component({
   selector: 'app-cred-selector',
@@ -12,7 +12,7 @@ export class CredSelectorComponent implements OnInit {
 
   public selectedRpc: string;
 
-  constructor(public credService: CredService, private TEST: NotifyService) { }
+  constructor(public chainInteractionService: ChainInteractionService, private TEST: DialogService) { }
 
   ngOnInit(): void {
   }

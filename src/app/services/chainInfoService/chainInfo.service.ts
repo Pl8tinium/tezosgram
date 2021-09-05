@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { request } from 'http';
 import { catchError, first, firstValueFrom, map, Observable, Subject, tap } from 'rxjs';
 import { MsgOperation } from 'src/app/models/msgOperation';
-import { NotifyService } from '../notifyService/notify.service';
+import { DialogService } from '../dialogService/dialog.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +20,7 @@ export class ChainInfoService {
   private tzStatsApiUrl: string = "https://api.florence.tzstats.com";
   // private tzStatsApiUrl: string = "https://api.tzstats.com";
 
-  constructor(private httpClient: HttpClient, private notifyService: NotifyService) { }
+  constructor(private httpClient: HttpClient, private dialogService: DialogService) { }
 
 
   public get newBlockNotification(): Observable<void> {
@@ -49,7 +49,7 @@ export class ChainInfoService {
           }
         }), error: ((error) => {
           console.warn(error);
-          this.notifyService.notify("Couldn't fetch latest block info. Your chats may be outdated!");
+          this.dialogService.notify("Couldn't fetch latest block info. Your chats may be outdated!");
         })
       })
       if (!this.newBlock.observed) {
@@ -83,7 +83,7 @@ export class ChainInfoService {
         })
         $response.next(msgOperations)
       }), error: (err => {
-        this.notifyService.notify("Couldn't retrieve message data for contract " + address);
+        this.dialogService.notify("Couldn't retrieve message data for contract " + address);
       })
     });
     return $response;

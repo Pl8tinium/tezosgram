@@ -16,13 +16,13 @@ export class ChannelService {
   }
 
   public moveChannel(info: ChannelInfo, event: MouseEvent): void {
-    if (this.currentlyMoving !== undefined && this._channels.some(channel => channel.channelKey === info.channelKey)) {
-      this._channels.find(channel => channel.channelKey === info.channelKey)?.instance.moveChannel(event);
+    if (this.currentlyMoving !== undefined && this._channels.some(channel => channel.channelAddress === info.channelAddress)) {
+      this._channels.find(channel => channel.channelAddress === info.channelAddress)?.instance.moveChannel(event);
     }
   }
 
   public addChannel(info: ChannelInfo): boolean {
-    if (!this._channels.some(channel => channel.channelKey === info.channelKey)) {
+    if (!this._channels.some(channel => channel.channelAddress === info.channelAddress)) {
       const highestLayer = Math.max(...this._channels.map(channel => channel.layer));
       info.layer = highestLayer !== -Infinity ? highestLayer + 1 : 1;
       this._channels.push(info);
@@ -34,8 +34,8 @@ export class ChannelService {
   }
 
   public removeChannel(info: ChannelInfo): void {
-    if (this._channels.some(channel => channel.channelKey === info.channelKey)) {
-      this._channels = this.channels.filter(channel => channel.channelKey !== info.channelKey);
+    if (this._channels.some(channel => channel.channelAddress === info.channelAddress)) {
+      this._channels = this.channels.filter(channel => channel.channelAddress !== info.channelAddress);
     }
   }
 

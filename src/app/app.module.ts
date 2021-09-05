@@ -22,6 +22,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
 import { CredSelectorComponent } from './components/credSelector/credSelector.component';
+import { MatRippleModule } from '@angular/material/core';
+import { DialogComponent } from './components/dialog/dialog.component';
 
 const materialModules = [
   MatInputModule,
@@ -32,6 +34,7 @@ const materialModules = [
   MatIconModule,
   MatTooltipModule,
   MatDialogModule,
+  MatRippleModule,
 ]
 
 @NgModule({
@@ -45,6 +48,7 @@ const materialModules = [
     BoardEventsDirective,
     ChannelSelectorComponent,
     CredSelectorComponent,
+    DialogComponent,
 
   ],
   imports: [

@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ChannelInfo } from 'src/app/models/channelInfo';
 import { ChannelService } from 'src/app/services/channelService/channel.service';
-import { NotifyService } from 'src/app/services/notifyService/notify.service';
 import { ChainInfoService } from 'src/app/services/chainInfoService/chainInfo.service';
+import { ChainInteractionService } from 'src/app/services/chainInteractionService/chainInteraction.service';
+import { DialogService } from 'src/app/services/dialogService/dialog.service';
+import { ChannelOrigination } from 'src/app/models/channelOrigination';
 
 @Component({
   selector: 'app-channel-selector',
@@ -17,12 +19,23 @@ export class ChannelSelectorComponent implements OnInit {
   private standardColor: string = '#2889e9';
   public selectedColor: string = this.standardColor;
 
-  constructor(private channelService: ChannelService, private chainInfoService: ChainInfoService, private notifyService: NotifyService) { }
+  constructor(private channelService: ChannelService, private chainInfoService: ChainInfoService, private dialogService: DialogService, public chainInteractionService: ChainInteractionService) { }
 
+  @ViewChild('originateChannelTemplate') private originateChannelTemplate: TemplateRef<any>;
 
+  private channelOrigination: ChannelOrigination | undefined;
 
   ngOnInit(): void {
 
+  }
+
+  public get getChannelOrigination(): ChannelOrigination {
+    return this.channelOrigination as ChannelOrigination;
+  }
+
+  public originateChannel(): void {
+    this.channelOrigination = new ChannelOrigination();
+    this.dialogService.displayForm(this.originateChannelTemplate);
   }
 
   public addChannel(): void {
@@ -40,7 +53,7 @@ export class ChannelSelectorComponent implements OnInit {
         if (isValid) {
           add();
         } else {
-          this.notifyService.notify("Contract has not been found on chain!");
+          this.dialogService.notify("Contract has not been found on chain!");
         }
       })
     }
