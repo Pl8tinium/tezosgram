@@ -3,11 +3,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": [],
-    "paths": {
-      "three-full": ["node_modules/three.module.js"],
-      "three-test": ["node_modules/three.module.js"]
-    }
+    "types": []
   },
   "files": [
     "src/main.ts",
