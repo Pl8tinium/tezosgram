@@ -3,6 +3,8 @@ import { TezosToolkit } from "@taquito/taquito";
 import { BeaconWallet } from "@taquito/beacon-wallet";
 import { ChannelOrigination } from 'src/app/models/channelOrigination';
 import { TrustedAddresses } from 'src/assets/trustedAddresses';
+import { Message } from '@angular/compiler/src/i18n/i18n_ast';
+import { ChannelInfo } from 'src/app/models/channelInfo';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +14,8 @@ export class ChainInteractionService implements OnInit {
   public readonly predefinedRpcs: Array<string> = Object.values(TrustedAddresses.predefinedRpcs);
 
   private selectedRpc: string = this.predefinedRpcs[0];
-  // private tezosToolkit = new TezosToolkit(this.selectedRpc);
-  // private wallet = new BeaconWallet({ name: "Beacon Docs Taquito" });
+  private tezosToolkit = new TezosToolkit(this.selectedRpc);
+  private wallet = new BeaconWallet({ name: "Beacon Docs Taquito" });
 
   constructor() { }
 
@@ -22,24 +24,26 @@ export class ChainInteractionService implements OnInit {
   }
 
   public get isAuthenticated(): boolean {
-    // impl
-    return true;
+    return this.wallet.client.getActiveAccount() !== undefined;
+  }
+
+  public sendMessage(message: string, info: ChannelInfo): void {
+    console.log(message)
   }
 
   public set setRpc(rpcUrl: string) {
     this.selectedRpc = rpcUrl;
     if (this.isValidUrl(this.selectedRpc)) {
-      console.log(this.selectedRpc)
-      // this.tezosToolkit.setRpcProvider(this.selectedRpc);
+      this.tezosToolkit.setRpcProvider(this.selectedRpc);
     }
   }
 
   public authWallet() {
-
+    this.wallet.client.requestPermissions();
   }
 
   public deauthWallet() {
-
+    this.wallet.clearActiveAccount();
   }
 
   public isValidUrl(url: string): boolean {
@@ -57,6 +61,6 @@ export class ChainInteractionService implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.tezosToolkit.setWalletProvider(this.wallet);
+    this.tezosToolkit.setWalletProvider(this.wallet);
   }
 }

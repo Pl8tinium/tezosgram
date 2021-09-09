@@ -5,6 +5,7 @@ import { Dimension } from 'src/app/models/dimension';
 import { MsgOperation } from 'src/app/models/msgOperation';
 import { BoardService } from 'src/app/services/boardService/board.service';
 import { ChainInfoService } from 'src/app/services/chainInfoService/chainInfo.service';
+import { ChainInteractionService } from 'src/app/services/chainInteractionService/chainInteraction.service';
 import { ChannelService } from 'src/app/services/channelService/channel.service';
 import { TopBarService } from 'src/app/services/topBarService/topBar.service';
 
@@ -21,11 +22,13 @@ export class ChannelComponent implements OnInit, OnDestroy {
   private invisibleBorder: Dimension = new Dimension(50, 50);
   private channelSize: Dimension = new Dimension(0, 0);
   private newBlockSubscription: Subscription;
+  public currentMessage: string = '';
+
 
   @Input()
   public info: ChannelInfo;
 
-  constructor(private topBarService: TopBarService, public channelService: ChannelService, private boardService: BoardService, private elementRef: ElementRef, private chainInfoService: ChainInfoService) { }
+  constructor(private topBarService: TopBarService, public channelService: ChannelService, private boardService: BoardService, private elementRef: ElementRef, private chainInfoService: ChainInfoService, private chainInteractionService: ChainInteractionService) { }
 
   public get position(): { top: string, left: string, zIndex: string } {
     return {
@@ -42,7 +45,11 @@ export class ChannelComponent implements OnInit, OnDestroy {
     this.initHtml();
     this.info.channelName = this.chainInfoService.getChannelName();
     this.fetchMsgs();
-    this.newBlockSubscription = this.chainInfoService.newBlockNotification.subscribe(this.fetchMsgs);
+    this.newBlockSubscription = this.chainInfoService.newBlockNotification.subscribe(() => this.fetchMsgs());
+  }
+
+  public sendMessage(): void {
+    this.chainInteractionService.sendMessage(this.currentMessage, this.info);
   }
 
   private fetchMsgs(): void {

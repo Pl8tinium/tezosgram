@@ -15,7 +15,17 @@
             </ng-container>
         </div>
         <div class="add-message">
-
+            <form class="add-message-container mat-elevation-z4">
+                <mat-form-field appearance="fill" class="add-message-write">
+                    <mat-label>Message</mat-label>
+                    <input matInput maxlength="256" placeholder="..." [(ngModel)]="currentMessage"
+                        name="add-message-input">
+                </mat-form-field>
+            </form>
+            <button class="add-message-send" mat-mini-fab color="primary" [matTooltipPosition]="'right'"
+                matTooltip="Send message" (click)="sendMessage()">
+                <mat-icon style="transform: scale(1.2);">send</mat-icon>
+            </button>
         </div>
     </div>
 </div>
