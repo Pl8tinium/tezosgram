@@ -1,14 +1,20 @@
 .outer {
     // border-radius: 15px;
     display: grid;
-    grid-template-rows: 10px auto;
+    grid-template-rows: 10px 10px auto;
     background-color: limegreen;
+    height: 100%;
+    width: 90%;
+
+    .block-height {
+        font-size: 10px;
+    }
 
     .sender {
         font-size: 10px;
     }
 
     .message {
-
+        margin-top: 3px;
     }
 }
