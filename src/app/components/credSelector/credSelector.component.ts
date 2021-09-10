@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { ChainInfoService } from 'src/app/services/chainInfoService/chainInfo.service';
 import { ChainInteractionService } from 'src/app/services/chainInteractionService/chainInteraction.service';
 import { DialogService } from 'src/app/services/dialogService/dialog.service';
-import { TrustedAddresses } from 'src/assets/trustedAddresses';
+import { TemplateStorage } from 'src/assets/templateStorage';
 
 @Component({
   selector: 'app-cred-selector',
@@ -27,7 +27,7 @@ export class CredSelectorComponent implements OnInit, AfterContentInit, AfterVie
   }
 
   ngAfterViewInit() {
-    this.rpcSelection.setValue(Object.keys(TrustedAddresses.predefinedRpcs)[0]);
+    this.rpcSelection.setValue(Object.keys(TemplateStorage.predefinedRpcs)[0]);
   }
 
   clickme() {

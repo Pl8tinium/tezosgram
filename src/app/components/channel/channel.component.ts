@@ -1,5 +1,5 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { AfterContentInit, AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { first, firstValueFrom, map, Observable, Subscription, tap } from 'rxjs';
 import { ChannelInfo } from 'src/app/models/channelInfo';
 import { Dimension } from 'src/app/models/dimension';
 import { MsgOperation } from 'src/app/models/msgOperation';
@@ -14,7 +14,7 @@ import { TopBarService } from 'src/app/services/topBarService/topBar.service';
   templateUrl: './channel.component.html',
   styleUrls: ['./channel.component.scss']
 })
-export class ChannelComponent implements OnInit, OnDestroy {
+export class ChannelComponent implements OnInit, OnDestroy, AfterViewInit {
   public messages: Array<MsgOperation>;
   private isInit: boolean = false;
   private mouseShift: Dimension = new Dimension(0, 0);
@@ -23,6 +23,8 @@ export class ChannelComponent implements OnInit, OnDestroy {
   private channelSize: Dimension = new Dimension(0, 0);
   private newBlockSubscription: Subscription;
   public currentMessage: string = '';
+  public isAutoScrollActive: boolean = true;
+  @ViewChild('messageContainer', { static: true }) private messageContainer: ElementRef;
 
 
   @Input()
@@ -44,16 +46,37 @@ export class ChannelComponent implements OnInit, OnDestroy {
     this.getChannelSize();
     this.initHtml();
     this.info.channelName = this.chainInfoService.getChannelName();
-    this.fetchMsgs();
-    this.newBlockSubscription = this.chainInfoService.newBlockNotification.subscribe(() => this.fetchMsgs());
+  }
+
+  ngAfterViewInit(): void {
+    this.fetchMsgs().then((areMsgsNew: boolean) => this.scrollMessages());
+    this.newBlockSubscription = this.chainInfoService.newBlockNotification.subscribe(() => this.fetchMsgs().then((areMsgsNew: boolean) => {
+      if (this.isAutoScrollActive && areMsgsNew) {
+        this.scrollMessages();
+      }
+    }));
+  }
+
+  public scrollMessages(): void {
+    try {
+      setTimeout(() => this.messageContainer.nativeElement.scrollTop = this.messageContainer.nativeElement.scrollHeight, 600);
+    } catch (err) { };
   }
 
   public sendMessage(): void {
-    this.chainInteractionService.sendMessage(this.currentMessage, this.info);
+    const messageBackup = this.currentMessage;
+    this.chainInteractionService.sendMessage(this.currentMessage, this.info).catch(() => this.currentMessage = messageBackup);
+    this.currentMessage = '';
   }
 
-  private fetchMsgs(): void {
-    this.chainInfoService.getOperationMsgs(this.info.channelAddress).subscribe((msgOps: Array<MsgOperation>) => this.messages = msgOps);
+  private fetchMsgs(): Promise<boolean> {
+    return firstValueFrom(this.chainInfoService.getOperationMsgs(this.info.channelAddress).pipe(
+      map(msgOps => {
+        const areMsgsNew = this.messages !== undefined ? this.messages.length !== msgOps.length : true;
+        this.messages = msgOps;
+        return areMsgsNew;
+      }),
+      first()));
   }
 
   ngOnDestroy(): void {

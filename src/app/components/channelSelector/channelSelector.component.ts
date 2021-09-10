@@ -7,7 +7,7 @@ import { ChainInteractionService } from 'src/app/services/chainInteractionServic
 import { DialogService } from 'src/app/services/dialogService/dialog.service';
 import { ChannelOrigination } from 'src/app/models/channelOrigination';
 import { PersistenceService } from 'src/app/services/persistenceService/persistence.service';
-import { TrustedAddresses } from 'src/assets/trustedAddresses';
+import { TemplateStorage } from 'src/assets/templateStorage';
 
 @Component({
   selector: 'app-channel-selector',
@@ -31,7 +31,7 @@ export class ChannelSelectorComponent implements OnInit {
   }
 
   public get availableChannels(): Array<string> {
-    const addresses = TrustedAddresses.trustedContracts.concat(this.persistenceService.getStoredAddresses)
+    const addresses = TemplateStorage.trustedContracts.concat(this.persistenceService.getStoredAddresses)
     return addresses.filter((v, i, a) => a.indexOf(v) === i).filter(address => address !== '' && address !== undefined);
   }
 

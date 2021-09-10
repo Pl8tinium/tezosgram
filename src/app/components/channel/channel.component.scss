@@ -41,13 +41,14 @@
         border-bottom-right-radius: 12px;
 
         .messages {
-            height: 80%;
+            height: 75%;
             width: 100%;
             display: flex;
             flex-direction: column;
             overflow: auto;
             align-items: center;
             margin-top: 5px;
+            scroll-behavior: smooth;
 
             .message-component {
                 padding-bottom: 50px;
@@ -76,31 +77,42 @@
         }
 
         .add-message {
-            height: 20%;
-            display: flex;
+            height: 25%;
+            display: grid;
+            grid-template-columns: 10% 10% auto 50px;
+            grid-template-rows: 18% 82%;
+            grid-template-areas: "autoscroll manualscroll . btn"
+                                 "newmsg newmsg newmsg btn";
             justify-items: center;
             align-items: center;
+            margin-left: 1%;
+
+            .add-message-down {
+                grid-area: manualscroll;
+                margin-top: 6px;
+            }
+
+            .add-message-autoscroll {
+                grid-area: autoscroll;
+                align-self: baseline;
+            }
 
             .add-message-container {
-                width: 100%;
+                grid-area: newmsg;
+                width: 95%;
                 height: 75%;
                 background-color: aqua;
                 border-radius: 10px;
-                margin: 0px 3px 5px 5px;
-            }
 
-            .add-message-write {
-                margin-bottom: 5px;
-                height: 75%;
-                width: 100%;
-
-                ::ng-deep .mat-form-field-underline {
-                    display: none;
+                .add-message-write {
+                    ::ng-deep .mat-form-field-underline {
+                        display: none;
+                    }
                 }
             }
 
             .add-message-send {
-                margin: 0px 3px 5px 0px;
+                grid-area: btn;
             }
         } 
     }           

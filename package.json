@@ -22,6 +22,7 @@
     "@angular/platform-browser-dynamic": "~12.2.3",
     "@angular/router": "~12.2.3",
     "@taquito/beacon-wallet": "^10.1.0",
+    "@taquito/signer": "^10.1.1",
     "@taquito/taquito": "^10.1.0",
     "@types/three": "^0.131.0",
     "crypto-browserify": "^3.12.0",
