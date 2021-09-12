@@ -15,7 +15,7 @@ export class ChainInteractionService implements OnInit {
 
   public readonly predefinedRpcs: Array<string> = Object.values(TemplateStorage.predefinedRpcs);
 
-  private selectedRpc: string = "https://florencenet.api.tez.ie";//this.predefinedRpcs[0];
+  private selectedRpc: string = "https://florencenet.api.tez.ie";// this.predefinedRpcs[0];
   private activeAccount: AccountInfo | undefined = undefined;
   private tezosToolkit = new TezosToolkit(this.selectedRpc);
   private wallet = new BeaconWallet({ name: "Beacon Docs Taquito" });
@@ -64,7 +64,7 @@ export class ChainInteractionService implements OnInit {
 
   public isValidUrl(url: string): boolean {
     try {
-      let urlTemp = new URL(url);
+      const urlTemp = new URL(url);
       return true;
     } catch (_) {
       return false;
@@ -91,13 +91,13 @@ export class ChainInteractionService implements OnInit {
     //       storage: {"prim":"Unit"}
     //     }
     //   }
-    // ]).then(hash => this.dialogService.notify('Injected operation with following hash: ' + hash)); 
+    // ]).then(hash => this.dialogService.notify('Injected operation with following hash: ' + hash));
   }
 
   ngOnInit(): void {
     // this.tezosToolkit.setWalletProvider(this.wallet);
     // this.tezosToolkit.setSignerProvider();
-    this.tezosToolkit.setProvider({ signer: InMemorySigner.fromFundraiser('qbefvyjp.rtiugebu@tezos.example.org', 'YrfdFa2Uw2', ["melt", "toast", "divide", "during", "train", "midnight", "become", "actor", "suit", "snake", "hire", "rather", "repeat", "pelican", "side"].join(' ')) })
+    //this.tezosToolkit.setProvider({ signer: InMemorySigner.fromFundraiser('qbefvyjp.rtiugebu@tezos.example.org', 'YrfdFa2Uw2', ["melt", "toast", "divide", "during", "train", "midnight", "become", "actor", "suit", "snake", "hire", "rather", "repeat", "pelican", "side"].join(' ')) })
     this.wallet.client.getActiveAccount().then((accountInfo: AccountInfo | undefined) => this.activeAccount = accountInfo);
   }
 }

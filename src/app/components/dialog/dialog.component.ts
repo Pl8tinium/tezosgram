@@ -5,12 +5,7 @@ import { Component, ElementRef, OnInit, TemplateRef } from '@angular/core';
   templateUrl: './dialog.component.html',
   styleUrls: ['./dialog.component.scss']
 })
-export class DialogComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+export class DialogComponent {
 
   public static currentRequestTemplate: TemplateRef<any> | undefined;
   public static currentMessage: string | undefined;

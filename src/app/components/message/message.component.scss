@@ -1,10 +1,11 @@
+@import '../../global-styles.scss';
+
 .outer {
+    height: 100%;
     // border-radius: 15px;
     display: grid;
     grid-template-rows: 10px 10px auto;
-    background-color: limegreen;
-    height: 100%;
-    width: 90%;
+    background-color: $site-color3;
 
     .block-height {
         font-size: 10px;

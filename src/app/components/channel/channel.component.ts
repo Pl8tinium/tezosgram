@@ -45,7 +45,7 @@ export class ChannelComponent implements OnInit, OnDestroy, AfterViewInit {
     this.setStartPosition();
     this.getChannelSize();
     this.initHtml();
-    this.info.channelName = this.chainInfoService.getChannelName();
+    this.chainInfoService.fetchAdditionalChannelInfo(this.info);
   }
 
   ngAfterViewInit(): void {
@@ -60,7 +60,8 @@ export class ChannelComponent implements OnInit, OnDestroy, AfterViewInit {
   public scrollMessages(): void {
     try {
       setTimeout(() => this.messageContainer.nativeElement.scrollTop = this.messageContainer.nativeElement.scrollHeight, 600);
-    } catch (err) { };
+    }
+    catch (err) { console.info('Error occured in auto scroll'); };
   }
 
   public sendMessage(): void {
@@ -71,7 +72,7 @@ export class ChannelComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private fetchMsgs(): Promise<boolean> {
     return firstValueFrom(this.chainInfoService.getOperationMsgs(this.info.channelAddress).pipe(
-      map(msgOps => {
+      map((msgOps: Array<MsgOperation>) => {
         const areMsgsNew = this.messages !== undefined ? this.messages.length !== msgOps.length : true;
         this.messages = msgOps;
         return areMsgsNew;

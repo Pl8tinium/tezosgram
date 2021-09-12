@@ -12,10 +12,8 @@ export class AppComponent implements OnInit {
 
   // animation
   isLoading: boolean = true;
-  timeLeft: number = 0;//1;
+  timeLeft: number = 0;// 1;
   interval: any;
-
-  constructor() { }
 
   ngOnInit(): void {
     this.loadingTimer();

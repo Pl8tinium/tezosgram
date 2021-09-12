@@ -11,6 +11,7 @@ export class ChannelInfo {
 
     public channelAddress: string;
     public channelName: string;
+    public channelVersion: string;
     public channelColor: string;
     public instance: ChannelComponent;
     public layer: number;

@@ -3,7 +3,7 @@
 .outer {    
     height: 90vh;
     width: 100vw;
-    background-color: aqua;
+    background-color: $site-color1;
     display: grid;
     z-index: -1;
 }
@@ -13,5 +13,5 @@
     width: 90%;
     justify-self: center;
     align-self: center;
-    background-color: aqua;
+    background-color: $site-color1;
 }

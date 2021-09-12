@@ -13,6 +13,4 @@ export class TopBarService {
   public get topBarHeight() {
     return this._topBarHeight;
   }
-
-  constructor() { }
 }

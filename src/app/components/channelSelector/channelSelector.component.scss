@@ -1,5 +1,7 @@
+@import '../../global-styles.scss';
+
 .outer {
-    background-color: rgb(241, 121, 121);
+    background-color: $site-color4;
     height: 8vh;
     display: flex;
     justify-content: space-evenly;
@@ -9,7 +11,7 @@
     overflow: hidden;
     
     .channel-select {
-        margin: 5% 10px 0px 15px;
+        margin: 25px 10px 0px 15px;
         width: 300px;
     }
 

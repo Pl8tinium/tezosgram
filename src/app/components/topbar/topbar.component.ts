@@ -8,12 +8,9 @@ import { TopBarService } from 'src/app/services/topBarService/topBar.service';
   templateUrl: './topbar.component.html',
   styleUrls: ['./topbar.component.scss']
 })
-export class TopBarComponent implements OnInit, AfterViewInit {
+export class TopBarComponent implements AfterViewInit {
 
   constructor(private topBarService: TopBarService, private channelService: ChannelService, private elementRef: ElementRef) { }
-
-  ngOnInit(): void {
-  }
 
   ngAfterViewInit(): void {
     this.topBarService.setTopBarHeight = this.elementRef.nativeElement.children[0].offsetHeight;

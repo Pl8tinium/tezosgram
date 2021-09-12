@@ -7,6 +7,4 @@ import { Dimension } from 'src/app/models/dimension';
 export class BoardService {
 
   public boardSize: Dimension;
-
-  constructor() { }
 }

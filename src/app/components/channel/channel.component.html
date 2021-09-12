@@ -10,6 +10,7 @@
     </div>
     <div class="content">
         <div #messageContainer class="messages">
+            <span class="channel-version">{{ "Channel code version: " + info.channelVersion }}</span>
             <ng-container *ngFor="let msg of messages">
                 <app-message class="message-component" [message]=msg></app-message>
             </ng-container>

@@ -1,8 +1,13 @@
 import { HttpClient, JsonpClientBackend } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { TezosToolkit } from '@taquito/taquito';
+import { TaquitoTezosDomainsClient } from '@tezos-domains/taquito-client';
 import { request } from 'http';
 import { catchError, first, firstValueFrom, map, Observable, Subject, tap } from 'rxjs';
+import { ChannelInfo } from 'src/app/models/channelInfo';
 import { MsgOperation } from 'src/app/models/msgOperation';
+import { TemplateStorage } from 'src/assets/templateStorage';
+import { ChainInteractionService } from '../chainInteractionService/chainInteraction.service';
 import { DialogService } from '../dialogService/dialog.service';
 
 @Injectable({
@@ -10,18 +15,19 @@ import { DialogService } from '../dialogService/dialog.service';
 })
 export class ChainInfoService {
 
-  private allowedContractsHashes: object = {
-    "v0.1": "3c3956f3",
-  };
   private newBlock: Subject<void>;
   private lastBlockHeight: number;
   private blockTime: number = 15000;
+  // private tezosToolkit = new TezosToolkit(this.chainInteractionService.getRpc);
+  private tezosToolkit = new TezosToolkit('https://delphinet-tezos.giganode.io/');
+  private tezosDomains = new TaquitoTezosDomainsClient({ tezos: this.tezosToolkit, network: 'florencenet', caching: { enabled: true } });
 
   private tzStatsApiUrl: string = "https://api.florence.tzstats.com";
   // private tzStatsApiUrl: string = "https://api.tzstats.com";
 
-  constructor(private httpClient: HttpClient, private dialogService: DialogService) { }
-
+  constructor(private httpClient: HttpClient, private dialogService: DialogService, private chainInteractionService: ChainInteractionService) {
+    this.resolveAddressToName('yess');
+  }
 
   public get newBlockNotification(): Observable<void> {
     if (this.newBlock === undefined) {
@@ -58,13 +64,29 @@ export class ChainInfoService {
     }, this.blockTime * refreshFactor);
   }
 
-  public getChannelName(): string {
+  public fetchAdditionalChannelInfo(info: ChannelInfo): void {
+    info.channelName = this.getChannelName();
+    info.channelVersion = this.getChannelVersion();
+  }
+
+  private getChannelName(): string {
     return "TESTNAMe";
     // impl
   }
 
-  public getOperationMsgs(address: string): Observable<any> {
-    const $response: Subject<any> = new Subject<any>();
+  private getChannelVersion(): string {
+    return "0.1";
+    // INFER THE CHANNEL VERSION BY THE CODE_HASH, USING ALLOWED CONTRACTS MAP
+  }
+
+  private resolveAddressToName(address: string): string {
+    // this.tezosDomains.resolver.resolveAddressToName(address);
+    this.tezosDomains.resolver.resolveAddressToName('tz1NjFgwjd7k1TJXLrzHjqS1TAFeiGCVVSLS').then(x => console.log(x))
+    return '';
+  }
+
+  public getOperationMsgs(address: string): Observable<Array<MsgOperation>> {
+    const $response: Subject<Array<MsgOperation>> = new Subject<Array<MsgOperation>>();
     const apiOpTableEndpoint: string = "/tables/op?";
     const paramReceiver: string = "receiver.eq=" + address;
     const paramLimit: string = "limit=50000";
@@ -73,7 +95,7 @@ export class ChainInfoService {
     // implement pagination here, not necessary rn because a single query can hold 50k entries
     // still necessary to implement in the future because better performance can be archieved when
     // the chat is only partialy loaded regularly
-    //const paramCursor: string = "cursor=LASTROWID"
+    // const paramCursor: string = "cursor=LASTROWID"
     const paramColumns = "columns=height,sender,data,parameters";
     const requestUrl = this.tzStatsApiUrl + apiOpTableEndpoint + paramReceiver + "&" + paramLimit + "&" + paramColumns;
     this.httpClient.get<Array<Array<any>>>(requestUrl).subscribe({
@@ -95,15 +117,15 @@ export class ChainInfoService {
   }
 
   public checkIfContractValid(address: string): Promise<boolean> {
-    interface contractInfo {
+    interface ContractInfo {
       code_hash: string;
     }
     const apiContractEndpoint = "/explorer/contract/";
     const requestUrl = this.tzStatsApiUrl + apiContractEndpoint + address
 
-    return firstValueFrom(this.httpClient.get<contractInfo>(requestUrl).pipe(
-      map((contract: contractInfo) => {
-        return Object.values(this.allowedContractsHashes).includes(contract.code_hash);
+    return firstValueFrom(this.httpClient.get<ContractInfo>(requestUrl).pipe(
+      map((contract: ContractInfo) => {
+        return Object.values(TemplateStorage.allowedContractsHashes).includes(contract.code_hash);
       }),
       catchError(err => {
         console.warn(err);

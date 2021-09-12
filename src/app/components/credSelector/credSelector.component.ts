@@ -10,7 +10,7 @@ import { TemplateStorage } from 'src/assets/templateStorage';
   templateUrl: './credSelector.component.html',
   styleUrls: ['./credSelector.component.scss']
 })
-export class CredSelectorComponent implements OnInit, AfterContentInit, AfterViewInit {
+export class CredSelectorComponent implements AfterContentInit, AfterViewInit {
 
   public selectedRpc: string;
   public rpcSelection: FormControl = new FormControl();
@@ -19,18 +19,11 @@ export class CredSelectorComponent implements OnInit, AfterContentInit, AfterVie
 
   constructor(public chainInteractionService: ChainInteractionService, private TEST: DialogService) { }
 
-  ngOnInit(): void {
-  }
-
   ngAfterContentInit() {
     this.isInitialized = true;
   }
 
   ngAfterViewInit() {
     this.rpcSelection.setValue(Object.keys(TemplateStorage.predefinedRpcs)[0]);
-  }
-
-  clickme() {
-
   }
 }

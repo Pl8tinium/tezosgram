@@ -14,7 +14,7 @@ import { TemplateStorage } from 'src/assets/templateStorage';
   templateUrl: './channelSelector.component.html',
   styleUrls: ['./channelSelector.component.scss']
 })
-export class ChannelSelectorComponent implements OnInit {
+export class ChannelSelectorComponent {
 
   public selectedChannel: string;
   private standardColor: string = '#2889e9';
@@ -25,10 +25,6 @@ export class ChannelSelectorComponent implements OnInit {
   @ViewChild('originateChannelTemplate') private originateChannelTemplate: TemplateRef<any>;
 
   private channelOrigination: ChannelOrigination | undefined;
-
-  ngOnInit(): void {
-
-  }
 
   public get availableChannels(): Array<string> {
     const addresses = TemplateStorage.trustedContracts.concat(this.persistenceService.getStoredAddresses)
@@ -48,7 +44,7 @@ export class ChannelSelectorComponent implements OnInit {
     this.executeWhenContractValid(this.persistenceService.addAddressToStorage, [this.selectedChannel]);
   }
 
-  private executeWhenContractValid(func: Function, params?: Array<any>): void {
+  private executeWhenContractValid(func: (Function), params?: Array<any>): void {
     this.chainInfoService.checkIfContractValid(this.selectedChannel).then((isValid: boolean) => {
       if (isValid) {
         if (params) {
