@@ -25,10 +25,12 @@
 
 <ng-template #originateChannelTemplate>
     <div class="originate-template">
-        <mat-form-field appearance="fill">
-            <mat-label>New channel name</mat-label>
-            <input matInput [(ngModel)]="getChannelOrigination.channelName">
-        </mat-form-field>
+        <form autocomplete="off">
+            <mat-form-field appearance="fill">
+                <mat-label>New channel name</mat-label>
+                <input matInput name="channelname-originate-template" [(ngModel)]="getChannelOrigination.channelName">
+            </mat-form-field>
+        </form>
         <div class="originate-template-send">
             <button mat-fab color="primary" class="originate-template-send-btn"
                 [disabled]="!getChannelOrigination.channelName || getChannelOrigination.isOriginated"

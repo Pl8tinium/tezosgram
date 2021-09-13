@@ -12,19 +12,15 @@ export class DialogService {
 
   public notify(msg: string) {
     console.info(msg);
+    DialogComponent.clearDialogComponent();
     DialogComponent.currentMessage = msg;
     const dialog = this.dialog.open(DialogComponent);
-    dialog.afterClosed().subscribe(result => {
-      DialogComponent.currentMessage = undefined;
-    });
   }
 
   public displayForm(template: TemplateRef<any>): MatDialogRef<DialogComponent, any> {
+    DialogComponent.clearDialogComponent();
     DialogComponent.currentRequestTemplate = template;
     const dialog = this.dialog.open(DialogComponent);
-    dialog.afterClosed().subscribe(result => {
-      DialogComponent.currentRequestTemplate = undefined;
-    });
     return dialog;
   }
 }

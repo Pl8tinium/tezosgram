@@ -17,4 +17,8 @@ export class DialogComponent {
   public get getCurrentRequestTemplate(): TemplateRef<any> {
     return DialogComponent.currentRequestTemplate as TemplateRef<any>;
   };
+
+  public static clearDialogComponent(): void {
+    DialogComponent.currentMessage, DialogComponent.currentRequestTemplate = undefined;
+  }
 }

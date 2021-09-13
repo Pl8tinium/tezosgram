@@ -7,6 +7,7 @@ import { ChannelInfo } from 'src/app/models/channelInfo';
 import { AccountInfo, Network, NetworkType, TezosOperationType } from '@airgap/beacon-sdk';
 import { DialogService } from '../dialogService/dialog.service';
 import { InMemorySigner } from '@taquito/signer';
+import { XtzMsgOnChainContract } from 'src/assets/smartpyContracts/xtzmsgContractv1.0';
 
 @Injectable({
   providedIn: 'root'
@@ -70,10 +71,30 @@ export class ChainInteractionService implements OnInit {
       return false;
     }
   }
-
+  //#mybe this helps https://github.com/ecadlabs/taquito/blob/master/docs/originate.md
   public originateChannel(channelOrigination: ChannelOrigination): void {
-    console.log(channelOrigination)
-    channelOrigination.isOriginated = true;
+    this.tezosToolkit.contract.originate({
+      code: XtzMsgOnChainContract.currentVersion, storage: {
+        channelN: channelOrigination.channelAddress,
+        lastMsg: '',
+      }
+    })
+      .then((originationOp) => {
+        console.info(`Waiting for confirmation of origination for ${originationOp.contractAddress}...`);
+        return originationOp.contract();
+      })
+      .then((contract) => {
+        console.info('Successfully originated contract with the following address: ' + contract.address);
+        channelOrigination.channelAddress = contract.address;
+        channelOrigination.isOriginated = true;
+      })
+      .catch((error) => {
+        console.info(error);
+        this.dialogService.notify('Error while originating new contract, try again or check the console');
+      });
+
+
+
     // this.wallet.sendOperations([
     //   {
     //     kind: TezosOperationType.TRANSACTION,
