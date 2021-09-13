@@ -1,5 +1,6 @@
 import { Component, ElementRef, Inject, Injectable, TemplateRef } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
 import { DialogComponent } from 'src/app/components/dialog/dialog.component';
 
 @Injectable({
@@ -18,11 +19,12 @@ export class DialogService {
     });
   }
 
-  public displayForm(template: TemplateRef<any>): void {
+  public displayForm(template: TemplateRef<any>): MatDialogRef<DialogComponent, any> {
     DialogComponent.currentRequestTemplate = template;
     const dialog = this.dialog.open(DialogComponent);
     dialog.afterClosed().subscribe(result => {
       DialogComponent.currentRequestTemplate = undefined;
     });
+    return dialog;
   }
 }

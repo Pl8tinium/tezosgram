@@ -2,13 +2,14 @@ export class MsgOperation {
 
     constructor(blockHeight: number, sender: string, invokedEntrypoint: string, message: string) {
         this.blockHeight = blockHeight;
-        this.sender = sender;
+        this.senderAddress = sender;
         this.invokedEntrypoint = invokedEntrypoint;
         this.message = message;
     }
 
     public blockHeight: number;
-    public sender: string;
+    public senderAddress: string;
+    public senderAddressResolved: string | null;
     public invokedEntrypoint: string;
     public message: string;
 }

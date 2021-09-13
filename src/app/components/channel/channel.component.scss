@@ -122,3 +122,11 @@
         } 
     }           
 }
+
+.send-again-template {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 30vh;
+    justify-content: space-evenly;
+}

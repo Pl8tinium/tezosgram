@@ -1,4 +1,5 @@
-import { AfterContentInit, AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterContentInit, AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { first, firstValueFrom, map, Observable, Subscription, tap } from 'rxjs';
 import { ChannelInfo } from 'src/app/models/channelInfo';
 import { Dimension } from 'src/app/models/dimension';
@@ -7,7 +8,9 @@ import { BoardService } from 'src/app/services/boardService/board.service';
 import { ChainInfoService } from 'src/app/services/chainInfoService/chainInfo.service';
 import { ChainInteractionService } from 'src/app/services/chainInteractionService/chainInteraction.service';
 import { ChannelService } from 'src/app/services/channelService/channel.service';
+import { DialogService } from 'src/app/services/dialogService/dialog.service';
 import { TopBarService } from 'src/app/services/topBarService/topBar.service';
+import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
   selector: 'app-channel',
@@ -22,15 +25,24 @@ export class ChannelComponent implements OnInit, OnDestroy, AfterViewInit {
   private invisibleBorder: Dimension = new Dimension(50, 50);
   private channelSize: Dimension = new Dimension(0, 0);
   private newBlockSubscription: Subscription;
+  public isMessageSent: boolean = false;
+  public alreadySentDialog: MatDialogRef<DialogComponent, any>;
   public currentMessage: string = '';
   public isAutoScrollActive: boolean = true;
   @ViewChild('messageContainer', { static: true }) private messageContainer: ElementRef;
-
+  @ViewChild('sendAnotherMessageTemplate') private sendAnotherMessageTemplate: TemplateRef<any>;
 
   @Input()
   public info: ChannelInfo;
 
-  constructor(private topBarService: TopBarService, public channelService: ChannelService, private boardService: BoardService, private elementRef: ElementRef, private chainInfoService: ChainInfoService, private chainInteractionService: ChainInteractionService) { }
+  constructor(private topBarService: TopBarService,
+    public channelService: ChannelService,
+    private boardService: BoardService,
+    private elementRef: ElementRef,
+    private chainInfoService: ChainInfoService,
+    private chainInteractionService: ChainInteractionService,
+    private dialogService: DialogService) { }
+
 
   public get position(): { top: string, left: string, zIndex: string } {
     return {
@@ -64,10 +76,29 @@ export class ChannelComponent implements OnInit, OnDestroy, AfterViewInit {
     catch (err) { console.info('Error occured in auto scroll'); };
   }
 
+  public decisionSendAgainDialog(sendAgain: boolean): void {
+    this.isMessageSent = sendAgain;
+    this.alreadySentDialog.close();
+  }
+
   public sendMessage(): void {
-    const messageBackup = this.currentMessage;
-    this.chainInteractionService.sendMessage(this.currentMessage, this.info).catch(() => this.currentMessage = messageBackup);
-    this.currentMessage = '';
+    const sendMsg = () => {
+      this.isMessageSent = true;
+      const messageBackup = this.currentMessage;
+      this.chainInteractionService.sendMessage(this.currentMessage, this.info).catch(() => this.currentMessage = messageBackup).finally(() => this.isMessageSent = false);
+      this.currentMessage = '';
+    }
+
+    if (this.isMessageSent) {
+      this.alreadySentDialog = this.dialogService.displayForm(this.sendAnotherMessageTemplate);
+      this.alreadySentDialog.afterClosed().subscribe(result => {
+        if (this.isMessageSent === false) {
+          sendMsg();
+        }
+      })
+    } else {
+      sendMsg();
+    }
   }
 
   private fetchMsgs(): Promise<boolean> {

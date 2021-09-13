@@ -3,7 +3,9 @@
         {{message.blockHeight}}
     </span>
     <span class="sender">
-        {{message.sender}}
+        {{ message.senderAddressResolved !== null && message.senderAddressResolved !== '' &&
+        message.senderAddressResolved !== undefined ?
+        message.senderAddressResolved : message.senderAddress }}
     </span>
     <div class="message">
         {{message.message}}

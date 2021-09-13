@@ -1,6 +1,7 @@
 import { HttpClient, JsonpClientBackend } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TezosToolkit } from '@taquito/taquito';
+import { Tzip16Module } from '@taquito/tzip16';
 import { TaquitoTezosDomainsClient } from '@tezos-domains/taquito-client';
 import { request } from 'http';
 import { catchError, first, firstValueFrom, map, Observable, Subject, tap } from 'rxjs';
@@ -18,15 +19,14 @@ export class ChainInfoService {
   private newBlock: Subject<void>;
   private lastBlockHeight: number;
   private blockTime: number = 15000;
-  // private tezosToolkit = new TezosToolkit(this.chainInteractionService.getRpc);
-  private tezosToolkit = new TezosToolkit('https://delphinet-tezos.giganode.io/');
+  private tezosToolkit = new TezosToolkit(this.chainInteractionService.getRpc);
   private tezosDomains = new TaquitoTezosDomainsClient({ tezos: this.tezosToolkit, network: 'florencenet', caching: { enabled: true } });
 
   private tzStatsApiUrl: string = "https://api.florence.tzstats.com";
   // private tzStatsApiUrl: string = "https://api.tzstats.com";
 
   constructor(private httpClient: HttpClient, private dialogService: DialogService, private chainInteractionService: ChainInteractionService) {
-    this.resolveAddressToName('yess');
+    this.tezosToolkit.addExtension(new Tzip16Module());
   }
 
   public get newBlockNotification(): Observable<void> {
@@ -69,6 +69,12 @@ export class ChainInfoService {
     info.channelVersion = this.getChannelVersion();
   }
 
+  private resolveAddressToName(msgOperation: MsgOperation): void {
+    this.tezosDomains.resolver.resolveAddressToName(msgOperation.senderAddress).then((name: string | null) => {
+      msgOperation.senderAddressResolved = name;
+    });
+  }
+
   private getChannelName(): string {
     return "TESTNAMe";
     // impl
@@ -77,12 +83,6 @@ export class ChainInfoService {
   private getChannelVersion(): string {
     return "0.1";
     // INFER THE CHANNEL VERSION BY THE CODE_HASH, USING ALLOWED CONTRACTS MAP
-  }
-
-  private resolveAddressToName(address: string): string {
-    // this.tezosDomains.resolver.resolveAddressToName(address);
-    this.tezosDomains.resolver.resolveAddressToName('tz1NjFgwjd7k1TJXLrzHjqS1TAFeiGCVVSLS').then(x => console.log(x))
-    return '';
   }
 
   public getOperationMsgs(address: string): Observable<Array<MsgOperation>> {
@@ -94,7 +94,7 @@ export class ChainInfoService {
     const indexMessage: number = 22;
     // implement pagination here, not necessary rn because a single query can hold 50k entries
     // still necessary to implement in the future because better performance can be archieved when
-    // the chat is only partialy loaded regularly
+    // the chat is only partialy loaded regularly + a lot less api calls for tz domains/ tzstats
     // const paramCursor: string = "cursor=LASTROWID"
     const paramColumns = "columns=height,sender,data,parameters";
     const requestUrl = this.tzStatsApiUrl + apiOpTableEndpoint + paramReceiver + "&" + paramLimit + "&" + paramColumns;
@@ -105,6 +105,7 @@ export class ChainInfoService {
           const operation = new MsgOperation(...resp as [number, string, string, string]);
           if (operation.invokedEntrypoint === entrypointMessage) {
             operation.message = Buffer.from(operation.message.substr(indexMessage), 'hex').toString('utf-8');
+            this.resolveAddressToName(operation);
             msgOperations.push(operation);
           }
         })

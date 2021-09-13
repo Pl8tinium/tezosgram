@@ -26,7 +26,7 @@
                 <mat-form-field appearance="fill" class="add-message-write">
                     <mat-label>Message</mat-label>
                     <input matInput maxlength="256" placeholder="..." [(ngModel)]="currentMessage"
-                        name="add-message-input">
+                        name="add-message-input" (keydown.enter)="sendMessage()">
                 </mat-form-field>
             </form>
             <button class="add-message-send" mat-mini-fab color="primary" [matTooltipPosition]="'right'"
@@ -36,3 +36,17 @@
         </div>
     </div>
 </div>
+
+<ng-template #sendAnotherMessageTemplate>
+    <div class="send-again-template">
+        <h1>You still have a pending operation. Are you sure you want to send another message?</h1>
+        <button mat-fab color="primary" [matTooltipPosition]="'right'" matTooltip="Don't send this operation"
+            (click)="decisionSendAgainDialog(true)">
+            <mat-icon style="transform: scale(2);">close</mat-icon>
+        </button>
+        <button mat-fab color="primary" [matTooltipPosition]="'right'" matTooltip="Send the operation"
+            (click)="decisionSendAgainDialog(false)">
+            <mat-icon style="transform: scale(2);">done</mat-icon>
+        </button>
+    </div>
+</ng-template>

@@ -15,7 +15,7 @@ export class ChainInteractionService implements OnInit {
 
   public readonly predefinedRpcs: Array<string> = Object.values(TemplateStorage.predefinedRpcs);
 
-  private selectedRpc: string = "https://florencenet.api.tez.ie";// this.predefinedRpcs[0];
+  private selectedRpc: string = "https://florencenet.smartpy.io";// this.predefinedRpcs[0];
   private activeAccount: AccountInfo | undefined = undefined;
   private tezosToolkit = new TezosToolkit(this.selectedRpc);
   private wallet = new BeaconWallet({ name: "Beacon Docs Taquito" });
