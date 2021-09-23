@@ -19,6 +19,6 @@ export class DialogComponent {
   };
 
   public static clearDialogComponent(): void {
-    DialogComponent.currentMessage, DialogComponent.currentRequestTemplate = undefined;
+    DialogComponent.currentMessage = DialogComponent.currentRequestTemplate = undefined;
   }
 }

@@ -9,9 +9,6 @@ export class XtzMsgOnChainContract {
     ];
 }
 
-
-
-
 // import smartpy as sp
 
 // class Xtzmsg(sp.Contract):
@@ -29,4 +26,4 @@ export class XtzMsgOnChainContract {
 //         c1 = Xtzmsg("Test channel name")
 //         scenario += c1
 //         scenario += c1.addMsg("A Message")
-//         scenario += c1.addMsg("Another one")
+//         scenario += c1.addMsg("Another onse")

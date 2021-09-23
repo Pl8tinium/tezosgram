@@ -1,6 +1,8 @@
+import { OriginationState } from "./enums/originationState";
+
 export class ChannelOrigination {
 
     public channelAddress: string;
     public channelName: string;
-    public isOriginated: boolean;
+    public state: OriginationState = OriginationState.NotDeployed;
 }

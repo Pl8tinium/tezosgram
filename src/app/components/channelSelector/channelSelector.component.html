@@ -11,7 +11,7 @@
     <input class="channel-color" [style.background]="selectedColor" [colorPicker]="selectedColor"
         (colorPickerChange)="selectedColor=$event" />
     <button class="channel-add" mat-fab color="primary" [matTooltipPosition]="'right'" matTooltip="Add to favorites"
-        (click)="addAddressToStorage()">
+        (click)="checkAddressAndAdd()">
         <mat-icon style="transform: scale(2);">favorite_border</mat-icon>
     </button>
     <button class="channel-add" mat-fab color="primary" [matTooltipPosition]="'right'"
@@ -33,19 +33,29 @@
         </form>
         <div class="originate-template-send">
             <button mat-fab color="primary" class="originate-template-send-btn"
-                [disabled]="!getChannelOrigination.channelName || getChannelOrigination.isOriginated"
+                [disabled]="!getChannelOrigination.channelName || OriginationState.NotDeployed !== getChannelOrigination.state"
                 [matTooltipPosition]="'right'" matTooltip="Originate a new channel!"
                 (click)="chainInteractionService.originateChannel(getChannelOrigination)">
                 <mat-icon style="transform: scale(2);">add_circle_outline</mat-icon>
             </button>
-            <div [style.background-color]="getChannelOrigination.isOriginated ? 'green' : 'yellow'"
-                matTooltip="{{ getChannelOrigination.isOriginated ? 'Instantiation status: Contract successfully originated!': 'Instantiation status: Contract not deployed, yet' }}"
+            <div [style.background-color]="getOriginationStatusColor" matTooltip="{{ getOriginationStatusToolTip }}"
                 class="originate-template-success"></div>
         </div>
-        <button class="originate-template-fav" mat-fab color="primary" [disabled]="!getChannelOrigination.isOriginated"
-            [matTooltipPosition]="'right'" matTooltip="Add to favorites"
-            (click)="persistenceService.addAddressToStorage(getChannelOrigination.channelAddress)">
+        <button class="originate-template-fav" mat-fab color="primary"
+            [disabled]="OriginationState.Originated !== getChannelOrigination.state" [matTooltipPosition]="'right'"
+            matTooltip="Add to favorites" (click)="addAddressToStorage(getChannelOrigination.channelAddress)">
             <mat-icon style="transform: scale(2);">favorite_border</mat-icon>
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #addToStorageTemplate>
+    <div class="add-storage-template">
+        <h2>This address is already stored in your favorites!</h2>
+        <p>Do you want to remove it?</p>
+        <button class="" mat-fab color="primary" matTooltip="Remove from favourites"
+            (click)="removeAddressFromStorage()">
+            <mat-icon style="transform: scale(2);">delete</mat-icon>
         </button>
     </div>
 </ng-template>

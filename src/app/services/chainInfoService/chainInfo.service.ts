@@ -65,8 +65,8 @@ export class ChainInfoService {
   }
 
   public fetchAdditionalChannelInfo(info: ChannelInfo): void {
-    info.channelName = this.getChannelName();
-    info.channelVersion = this.getChannelVersion();
+    this.getChannelName(info);
+    this.getChannelVersion(info);
   }
 
   private resolveAddressToName(msgOperation: MsgOperation): void {
@@ -75,14 +75,35 @@ export class ChainInfoService {
     });
   }
 
-  private getChannelName(): string {
-    return "TESTNAMe";
-    // impl
+  private getChannelName(info: ChannelInfo): void {
+    const apiContractEndpoint: string = "/explorer/contract/";
+    const apiStorageEndpoint: string = "/storage";
+    const requestUrl = this.tzStatsApiUrl + apiContractEndpoint + info.channelAddress + apiStorageEndpoint;
+    this.httpClient.get(requestUrl).subscribe({
+      next: ((response: any) => {
+        info.channelName = response['value']['channelName'];
+      }), error: (err => {
+        info.channelName = "Channelname not fetchable";
+        console.warn("Error while fetching channel name: ", err);
+      })
+    });
   }
 
-  private getChannelVersion(): string {
-    return "0.1";
-    // INFER THE CHANNEL VERSION BY THE CODE_HASH, USING ALLOWED CONTRACTS MAP
+  private getChannelVersion(info: ChannelInfo): void {
+    const apiContractEndpoint: string = "/explorer/contract/";
+    const requestUrl = this.tzStatsApiUrl + apiContractEndpoint + info.channelAddress;
+    this.httpClient.get(requestUrl).subscribe({
+      next: ((response: any) => {
+        if (Object.keys(TemplateStorage.allowedContractsHashes).includes(response['code_hash'])) {
+          info.channelVersion = TemplateStorage.allowedContractsHashes[response['code_hash']];
+        } else {
+          throw new Error("Code hash not found in response");
+        }
+      }), error: (err => {
+        info.channelVersion = "not fetchable";
+        console.warn("Error while fetching channel code version: ", err);
+      })
+    });
   }
 
   public getOperationMsgs(address: string): Observable<Array<MsgOperation>> {
@@ -126,7 +147,7 @@ export class ChainInfoService {
 
     return firstValueFrom(this.httpClient.get<ContractInfo>(requestUrl).pipe(
       map((contract: ContractInfo) => {
-        return Object.values(TemplateStorage.allowedContractsHashes).includes(contract.code_hash);
+        return Object.keys(TemplateStorage.allowedContractsHashes).includes(contract.code_hash);
       }),
       catchError(err => {
         console.warn(err);

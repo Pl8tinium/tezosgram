@@ -8,6 +8,7 @@ import { AccountInfo, Network, NetworkType, TezosOperationType } from '@airgap/b
 import { DialogService } from '../dialogService/dialog.service';
 import { InMemorySigner } from '@taquito/signer';
 import { XtzMsgOnChainContract } from 'src/assets/smartpyContracts/xtzmsgContractv1.0';
+import { OriginationState } from 'src/app/models/enums/originationState';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,7 @@ export class ChainInteractionService implements OnInit {
       .catch((error) => {
         console.log(`Error while trying to inject operation: ${error}`);
         console.log(JSON.stringify(error));
+        throw error;
       });
   }
 
@@ -71,51 +73,31 @@ export class ChainInteractionService implements OnInit {
       return false;
     }
   }
-  //#mybe this helps https://github.com/ecadlabs/taquito/blob/master/docs/originate.md
+
   public originateChannel(channelOrigination: ChannelOrigination): void {
     this.tezosToolkit.contract.originate({
-      code: XtzMsgOnChainContract.currentVersion, storage: {
-        channelN: channelOrigination.channelAddress,
-        lastMsg: '',
-      }
+      code: XtzMsgOnChainContract.currentVersion,
+      init: { "prim": "Pair", "args": [{ "string": channelOrigination.channelName }, { "string": "" }] },
+
     })
       .then((originationOp) => {
         console.info(`Waiting for confirmation of origination for ${originationOp.contractAddress}...`);
+        channelOrigination.state = OriginationState.Injected;
         return originationOp.contract();
       })
       .then((contract) => {
         console.info('Successfully originated contract with the following address: ' + contract.address);
         channelOrigination.channelAddress = contract.address;
-        channelOrigination.isOriginated = true;
+        channelOrigination.state = OriginationState.Originated;
       })
       .catch((error) => {
         console.info(error);
         this.dialogService.notify('Error while originating new contract, try again or check the console');
       });
-
-
-
-    // this.wallet.sendOperations([
-    //   {
-    //     kind: TezosOperationType.TRANSACTION,
-    //     destination: info.channelAddress, // Send to ourselves
-    //     amount: "0", // Amount in mutez, the smallest unit in Tezos
-
-    //   },
-    //   {
-    //     kind: 'transaction',
-    //     balance: '50',
-    //     spendable: false,
-    //     delegatable: false,
-    //     script: {
-    //       code: [{"prim":"parameter","args":[{"prim":"contract","args":[{"prim":"unit"}],"annots":[":X"]}]},{"prim":"storage","args":[{"prim":"unit"}]},{"prim":"code","args":[[{"prim":"CDR","annots":["@storage_slash_1"]},{"prim":"NIL","args":[{"prim":"operation"}]},{"prim":"PAIR"}]]}],
-    //       storage: {"prim":"Unit"}
-    //     }
-    //   }
-    // ]).then(hash => this.dialogService.notify('Injected operation with following hash: ' + hash));
   }
 
   ngOnInit(): void {
+    // move to constructor, ngoninit not executed
     // this.tezosToolkit.setWalletProvider(this.wallet);
     // this.tezosToolkit.setSignerProvider();
     //this.tezosToolkit.setProvider({ signer: InMemorySigner.fromFundraiser('qbefvyjp.rtiugebu@tezos.example.org', 'YrfdFa2Uw2', ["melt", "toast", "divide", "during", "train", "midnight", "become", "actor", "suit", "snake", "hire", "rather", "repeat", "pelican", "side"].join(' ')) })

@@ -10,17 +10,28 @@ export class DialogService {
 
   constructor(private dialog: MatDialog) { }
 
+  public currentDialog: MatDialogRef<DialogComponent, any>;
+
   public notify(msg: string) {
+    this.closePreviousDialogs();
     console.info(msg);
     DialogComponent.clearDialogComponent();
     DialogComponent.currentMessage = msg;
-    const dialog = this.dialog.open(DialogComponent);
+    this.currentDialog = this.dialog.open(DialogComponent);
+  }
+
+  private closePreviousDialogs(): void {
+    if (this.currentDialog) {
+      this.currentDialog.close();
+    }
   }
 
   public displayForm(template: TemplateRef<any>): MatDialogRef<DialogComponent, any> {
+    this.closePreviousDialogs();
     DialogComponent.clearDialogComponent();
     DialogComponent.currentRequestTemplate = template;
     const dialog = this.dialog.open(DialogComponent);
+    this.currentDialog = dialog;
     return dialog;
   }
 }
