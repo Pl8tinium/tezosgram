@@ -31,7 +31,7 @@ export class LoadingComponent implements OnInit {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
 
     const loader = new THREE.TextureLoader();
-    const texture = loader.load('/assets/tezos-xtz-logo.svg')
+    const texture = loader.load('assets/tezos-xtz-logo.svg')
     const material2 = new THREE.MeshBasicMaterial({ map: texture });
     const geometry = new THREE.BoxGeometry();
     this.cube = new THREE.Mesh(geometry, material2);
