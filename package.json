@@ -30,6 +30,7 @@
     "@tezos-domains/core": "^1.7.0",
     "@tezos-domains/taquito-client": "^1.7.0",
     "@types/three": "^0.131.1",
+    "angular-cli-ghpages": "^1.0.0-rc.2",
     "https-browserify": "^1.0.0",
     "ngx-color-picker": "^11.0.0",
     "os-browserify": "^0.3.0",
