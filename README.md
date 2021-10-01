@@ -19,7 +19,16 @@ This thought is justified, because nobody wants to write and pay (even though th
 <br>
 
 ### How to use it?
+* To connect your wallet via the beacon api press the button on the top right corner of the page. You dont need a connected wallet to read the channels messages, but obviously if you also want to write messages or initiate channels. 
+![connect wallet](./misc/instructions/connectWallet.png)  
+* To open up a channel you first have to select a channel (contract address). Either one of the predefined channels or by directly entering the address into the textbox.
+![select channel](./misc/instructions/selectChannel.png)  
+* Now open up the channel by clicking the button with the dot array. Btw you can also change the background color of the channel for better distinguishment and add addresses as favourites in this menu.     
+![open channel](./misc/instructions/openChannel.png)
+* To initiate a new channel press on the plus icon on the top right corner and enter a channel name.  
+![new channel](./misc/instructions/initiateNewChannel.png)
 
+<br>
 
 ## Improvement ideas
 * hicetnunc nft profile picture integration
