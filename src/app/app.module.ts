@@ -7,7 +7,6 @@ import { LoadingComponent } from './components/loading/loading.component';
 import { ChannelComponent } from './components/channel/channel.component';
 import { ChannelMoveEventsDirective } from './directives/channelMoveEvents.directive';
 import { BoardEventsDirective } from './directives/boardEvents.directive';
-import { TopBarComponent } from './components/topBar/topBar.component';
 import { ChannelSelectorComponent } from './components/channelSelector/channelSelector.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
@@ -27,6 +26,7 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatCardModule } from '@angular/material/card';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { MessageComponent } from './components/message/message.component';
+import { TopBarComponent } from './components/topbar/topBar.component';
 
 const materialModules = [
   MatInputModule,

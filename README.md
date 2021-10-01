@@ -28,3 +28,4 @@ This thought is justified, because nobody wants to write and pay (even though th
 * "private" channels (permission system) where e.g. only permissioned addresses are allowed to write messages and "invite" people
 * network selection for testnets
 * implement a caching mechanism
+* rework UI design so its compatible with mobile devices

@@ -20,10 +20,12 @@ export class ChainInfoService {
   private lastBlockHeight: number;
   private blockTime: number = 15000;
   private tezosToolkit = new TezosToolkit(this.chainInteractionService.getRpc);
-  private tezosDomains = new TaquitoTezosDomainsClient({ tezos: this.tezosToolkit, network: 'florencenet', caching: { enabled: true } });
+  private alreadyResolvedDomains: { [key: string]: string } = {};
 
-  private tzStatsApiUrl: string = "https://api.florence.tzstats.com";
-  // private tzStatsApiUrl: string = "https://api.tzstats.com";
+  //private tzStatsApiUrl: string = "https://api.florence.tzstats.com";
+  //private tezosDomains = new TaquitoTezosDomainsClient({ tezos: this.tezosToolkit, network: 'florencenet', caching: { enabled: true } });
+  private tzStatsApiUrl: string = "https://api.tzstats.com";
+  private tezosDomains = new TaquitoTezosDomainsClient({ tezos: this.tezosToolkit, network: 'mainnet', caching: { enabled: true } });
 
   constructor(private httpClient: HttpClient, private dialogService: DialogService, private chainInteractionService: ChainInteractionService) {
     this.tezosToolkit.addExtension(new Tzip16Module());
@@ -70,9 +72,14 @@ export class ChainInfoService {
   }
 
   private resolveAddressToName(msgOperation: MsgOperation): void {
-    this.tezosDomains.resolver.resolveAddressToName(msgOperation.senderAddress).then((name: string | null) => {
-      msgOperation.senderAddressResolved = name;
-    });
+    if (this.alreadyResolvedDomains[msgOperation.senderAddress] !== undefined) {
+      msgOperation.senderAddressResolved = this.alreadyResolvedDomains[msgOperation.senderAddress];
+    } else {
+      this.tezosDomains.resolver.resolveAddressToName(msgOperation.senderAddress).then((name: string | null) => {
+        msgOperation.senderAddressResolved = name;
+        this.alreadyResolvedDomains[msgOperation.senderAddress] = <string>name;
+      });
+    }
   }
 
   private getChannelName(info: ChannelInfo): void {

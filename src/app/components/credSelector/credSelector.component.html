@@ -14,7 +14,7 @@
         </mat-autocomplete>
     </mat-form-field>
     <button class="connect-cred" mat-fab color="primary" [matTooltipPosition]="'right'"
-        (click)="chainInteractionService.isAuthenticated ? chainInteractionService.authWallet(): chainInteractionService.deauthWallet()"
+        (click)="chainInteractionService.isAuthenticated ? chainInteractionService.deauthWallet() : chainInteractionService.authWallet()"
         matTooltip="{{chainInteractionService.isAuthenticated ? 'Disconnect your wallet' : 'Connect your wallet' }}">
         <img src="assets/beaconIcon.png">
     </button>

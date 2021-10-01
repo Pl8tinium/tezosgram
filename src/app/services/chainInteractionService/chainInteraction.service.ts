@@ -4,7 +4,7 @@ import { BeaconWallet } from "@taquito/beacon-wallet";
 import { ChannelOrigination } from 'src/app/models/channelOrigination';
 import { TemplateStorage } from 'src/assets/templateStorage';
 import { ChannelInfo } from 'src/app/models/channelInfo';
-import { AccountInfo, Network, NetworkType, TezosOperationType } from '@airgap/beacon-sdk';
+import { AccountInfo, BeaconEvent, Network, NetworkType, TezosOperationType } from '@airgap/beacon-sdk';
 import { DialogService } from '../dialogService/dialog.service';
 import { InMemorySigner } from '@taquito/signer';
 import { XtzMsgOnChainContract } from 'src/assets/smartpyContracts/xtzmsgContractv1.0';
@@ -13,17 +13,19 @@ import { OriginationState } from 'src/app/models/enums/originationState';
 @Injectable({
   providedIn: 'root'
 })
-export class ChainInteractionService implements OnInit {
+export class ChainInteractionService {
 
   public readonly predefinedRpcs: Array<string> = Object.values(TemplateStorage.predefinedRpcs);
 
-  private selectedRpc: string = "https://florencenet.smartpy.io";// this.predefinedRpcs[0];
+  private selectedRpc: string = this.predefinedRpcs[0];
   private activeAccount: AccountInfo | undefined = undefined;
   private tezosToolkit = new TezosToolkit(this.selectedRpc);
-  private wallet = new BeaconWallet({ name: "Beacon Docs Taquito" });
+  private wallet = new BeaconWallet({ name: "wallet" });
 
   constructor(private dialogService: DialogService) {
-    this.tezosToolkit.setSignerProvider(InMemorySigner.fromFundraiser('qbefvyjp.rtiugebu@tezos.example.org', 'YrfdFa2Uw2', ["melt", "toast", "divide", "during", "train", "midnight", "become", "actor", "suit", "snake", "hire", "rather", "repeat", "pelican", "side"].join(' ')));
+    this.tezosToolkit.setWalletProvider(this.wallet);
+    this.wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, (accountInfo: AccountInfo | undefined) => { this.activeAccount = accountInfo; });
+    // this.tezosToolkit.setSignerProvider(InMemorySigner.fromFundraiser('qbefvyjp.rtiugebu@tezos.example.org', 'YrfdFa2Uw2', ["melt", "toast", "divide", "during", "train", "midnight", "become", "actor", "suit", "snake", "hire", "rather", "repeat", "pelican", "side"].join(' ')));
   }
 
   public get getRpc(): string {
@@ -35,13 +37,13 @@ export class ChainInteractionService implements OnInit {
   }
 
   public sendMessage(message: string, info: ChannelInfo): Promise<void> {
-    return this.tezosToolkit.contract
+    return this.tezosToolkit.wallet
       .at(info.channelAddress)
       .then((c) => {
         return c.methods.default(message).send();
       })
       .then((op) => {
-        console.info('Injected your message with the following operation hash: ' + op.hash);
+        console.info('Injected your message with the following operation hash: ' + op.opHash);
       })
       .catch((error) => {
         console.log(`Error while trying to inject operation: ${error}`);
@@ -75,13 +77,14 @@ export class ChainInteractionService implements OnInit {
   }
 
   public originateChannel(channelOrigination: ChannelOrigination): void {
-    this.tezosToolkit.contract.originate({
+    this.tezosToolkit.wallet.originate({
       code: XtzMsgOnChainContract.currentVersion,
       init: { "prim": "Pair", "args": [{ "string": channelOrigination.channelName }, { "string": "" }] },
 
     })
+      .send()
       .then((originationOp) => {
-        console.info(`Waiting for confirmation of origination for ${originationOp.contractAddress}...`);
+        console.info(`Waiting for confirmation of origination with the following operation hash: ${originationOp.opHash}...`);
         channelOrigination.state = OriginationState.Injected;
         return originationOp.contract();
       })
@@ -94,13 +97,5 @@ export class ChainInteractionService implements OnInit {
         console.info(error);
         this.dialogService.notify('Error while originating new contract, try again or check the console');
       });
-  }
-
-  ngOnInit(): void {
-    // move to constructor, ngoninit not executed
-    // this.tezosToolkit.setWalletProvider(this.wallet);
-    // this.tezosToolkit.setSignerProvider();
-    //this.tezosToolkit.setProvider({ signer: InMemorySigner.fromFundraiser('qbefvyjp.rtiugebu@tezos.example.org', 'YrfdFa2Uw2', ["melt", "toast", "divide", "during", "train", "midnight", "become", "actor", "suit", "snake", "hire", "rather", "repeat", "pelican", "side"].join(' ')) })
-    this.wallet.client.getActiveAccount().then((accountInfo: AccountInfo | undefined) => this.activeAccount = accountInfo);
   }
 }

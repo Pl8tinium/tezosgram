@@ -12,7 +12,7 @@ export class AppComponent implements OnInit {
 
   // animation
   isLoading: boolean = true;
-  timeLeft: number = 0;// 1;
+  timeLeft: number = 1;
   interval: any;
 
   ngOnInit(): void {
@@ -27,6 +27,6 @@ export class AppComponent implements OnInit {
         clearInterval(this.interval);
         this.isLoading = false;
       }
-    }, 1000);
+    }, 590);
   }
 }

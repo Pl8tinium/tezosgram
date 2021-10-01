@@ -3,12 +3,13 @@ export class TemplateStorage {
         "3c3956f3": "v0.1",
     };
     public static readonly trustedContracts: Array<string> = [
-        'KT1AD55utWAC27ubY2rQaYXDa7Vi37Ev9vHc',
-        'PredefinedContractAddr2',
-        'PredefinedContractAddr3'
+        'KT1CQW5h3H4nscqbDFsLSUJeuA5ukjr2AyN7',
+        'KT19Gycr8bbAeqfgPxzBAYfQXRXSMDUbJneK',
+        'KT1H5PSDAXz5MVTuQHdWtAPUGUBjqY9BJJwF'
     ];
     public static readonly predefinedRpcs: object = {
-        "Tezos Giganode": "https://mainnet-tezos.giganode.io",
+        "ECAD Labs": "https://mainnet.api.tez.ie",
+        "SmartpPy": "https://mainnet.smartpy.io",
         "Tz stats": "https://rpc.tzstats.com"
     };
 }
